@@ -1,46 +1,29 @@
 const minecraftCommand = require("../../contracts/minecraftCommand.js");
-const fs = require('fs');
-const { fetchPlayerAPI, isGuildMaster } = require("../../../API/functions/GuildAPI");
+const { fetchPlayerAPI } = require("../../../API/functions/GuildAPI");
+const fs = require("fs");
 
 class WhitelistCommand extends minecraftCommand {
     constructor(minecraft) {
         super(minecraft);
 
         this.name = "whitelist";
-        this.aliases = ["wl"];
-        this.description = "Manage whitelist for players to exclude them from getting kicked during purge.";
+        this.description = "Add or remove players from the whitelist.";
         this.options = [
             {
                 name: "action",
-                description: "Action to perform: add or remove",
+                description: "Action to perform (add or remove)",
                 required: true,
-                choices: [
-                    {
-                        name: "add",
-                        value: "add"
-                    },
-                    {
-                        name: "remove",
-                        value: "remove"
-                    }
-                ]
             },
             {
-                name: "player",
-                description: "Player to whitelist",
-                required: true
-            }
+                name: "playername",
+                description: "Name of the player",
+                required: true,
+            },
         ];
     }
 
-    async onCommand(player, message) {
+    async onCommand(username, message) {
         try {
-            // Check if the player is a guild master
-            if (!await isGuildMaster(player.uuid)) {
-                await this.send("You must be a Guild Master to use this command.");
-                return;
-            }
-
             const args = this.getArgs(message);
             const action = args[0].toLowerCase();
             const playerName = args[1];
