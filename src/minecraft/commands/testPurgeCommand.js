@@ -39,21 +39,24 @@ class TestPurgeCommand extends minecraftCommand {
                 break;
             default:
                 console.log('Invalid time unit. Please use "w" for weeks or "m" for months.');
+                this.send('/oc Invalid time unit. Please use "w" for weeks or "m" for months.');
                 return;
         }
         console.log('time:', time);  // Debugging line
     
         // Fetch guild data
         console.log('Fetching guild data...');  // Debugging line
+        this.send('/oc Fetching guild data...');  // Debugging line
         const guildData = await fetchGuildAPI();
         console.log('Guild data fetched');  // Debugging line
-    
+        this.send('/oc Guild data fetched');  // Debugging lin
+
         // Iterate over guild members and check last login time
         console.log('Iterating over guild members...');  // Debugging line
         for (const member of guildData.guild.members) {
             const lastLogin = member.playerData.lastLogin;
             console.log(`Checking last login time for player ${member.playerData.displayname}`);  // Debugging line
-    
+
             if ((Date.now() - lastLogin) > time) {
                 const offlineTime = Date.now() - lastLogin;
                 const offlineDays = Math.floor(offlineTime / (1000 * 60 * 60 * 24));
