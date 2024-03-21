@@ -1,6 +1,5 @@
-const fs = require('fs');
-const path = require('path');
 const minecraftCommand = require("../../contracts/minecraftCommand.js");
+const { fetchPlayerAPI, fetchGuildAPI } = require("../../../API/functions/GuildAPI");
 
 class TestPurgeCommand extends minecraftCommand {
     constructor(minecraft) {
@@ -43,18 +42,38 @@ class TestPurgeCommand extends minecraftCommand {
                 return;
         }
 
-        // Read guild data from apiOutput.json
-        const guildData = JSON.parse(fs.readFileSync(path.join(__dirname, '../../../apiOutput.json'), 'utf8'));
+        // Fetch guild data
+        const guildData = await fetchGuildAPI();
+
+        // Fetch player data for each member
+        const membersData = await Promise.all(guildData.members.map(async (member) => {
+            const playerData = await fetchPlayerAPI(member.uuid);
+            return {
+                memberData: {
+                    uuid: member.uuid,
+                    rank: member.rank,
+                    joined: member.joined,
+                    expHistory: member.expHistory
+                },
+                playerData: {
+                    id: playerData._id,
+                    uuid: playerData.uuid,
+                    displayname: playerData.displayname,
+                    firstLogin: playerData.firstLogin,
+                    lastLogin: playerData.lastLogin
+                }
+            };
+        }));
 
         // Iterate over guild members and check last login time
-        for (const member of guildData.guild.members) {
+        for (const member of membersData) {
             const lastLogin = member.playerData.lastLogin;
 
             if ((Date.now() - lastLogin) > time) {
                 const offlineTime = Date.now() - lastLogin;
                 const offlineDays = Math.floor(offlineTime / (1000 * 60 * 60 * 24));
                 console.log(`Player ${member.playerData.displayname} would be kicked for being offline for ${offlineDays} days`);
-                await this.send(`/gc Player Player ${member.playerData.displayname} would be kicked for being offline for ${offlineDays} days`);
+                await this.minecraft.send(`/oc Player ${member.playerData.displayname} has been offline for ${offlineDays} days`);
                 await new Promise(resolve => setTimeout(resolve, 1000)); // Add a delay between messages
             }
         }
