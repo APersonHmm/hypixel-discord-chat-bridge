@@ -2,8 +2,8 @@
 const minecraftCommand = require("../../contracts/minecraftCommand.js");
 const fs = require("fs");
 const fetch = require("node-fetch");
-const config = require("../../config"); // Assuming your config is in this location
-const { fetchPlayerAPI } = require("../../guildAPI"); // Assuming your fetchPlayerAPI function is exported from this location
+const config = require("../../../config"); // Assuming your config is in this location
+const { fetchPlayerAPI } = require("../../../API/functions/GuildAPI"); // Assuming your fetchPlayerAPI function is exported from this location
 
 class TestPurgeCommand extends minecraftCommand {
     constructor(minecraft) {
