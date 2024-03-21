@@ -50,8 +50,8 @@ async function fetchPlayerAPI(uuid) {
     } catch (error) {
         throw new Error("Failed to fetch player data: " + error.message);
     }
-}   }
-}
+}   
+
 
 function isGuildMaster(playerUUID) {
     const guildData = guildCache.get(config.minecraft.guild.guildID);
