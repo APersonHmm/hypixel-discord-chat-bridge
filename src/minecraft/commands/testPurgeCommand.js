@@ -48,7 +48,7 @@ class TestPurgeCommand extends minecraftCommand {
         const issuerUUID = await getUUID(username);
 
         if (!issuerUUID) {
-            this.send (`UUID not found for player ${username}.`);
+            this.send (`/oc UUID not found for player ${username}.`);
         }
 
         // Fetch guild data
@@ -58,12 +58,13 @@ class TestPurgeCommand extends minecraftCommand {
         const issuerMemberData = guildData.members.find(member => member.uuid === issuerUUID);
 
         if (!issuerMemberData) {
-            this.send (`Player ${username} not found in the guild data.`);
+            this.send (`/oc Player ${username} not found in the guild data.`);
         }
 
         // Check if the player has the rank "Guild Leader"
         if (issuerMemberData.rank !== "Guild Leader") {
-            this.send (`Player ${username} does not have the required rank to run this command.`);
+            await this.send(`/oc Player ${username} does not have the required rank to run this command.`);
+            return;
         }
 
         // Fetch player data for each member
