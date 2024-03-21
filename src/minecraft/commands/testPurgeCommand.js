@@ -23,8 +23,11 @@ class TestPurgeCommand extends minecraftCommand {
     }
 
     async onCommand(args) {
+        console.log('onCommand started');  // Debugging line
+    
         // Parse the time argument
         const timeArg = args[0];
+        console.log('timeArg:', timeArg);  // Debugging line
         const timeUnit = timeArg.slice(-1);
         let time;
         switch (timeUnit) {
@@ -38,14 +41,19 @@ class TestPurgeCommand extends minecraftCommand {
                 console.log('Invalid time unit. Please use "w" for weeks or "m" for months.');
                 return;
         }
-
+        console.log('time:', time);  // Debugging line
+    
         // Fetch guild data
+        console.log('Fetching guild data...');  // Debugging line
         const guildData = await fetchGuildAPI();
-
+        console.log('Guild data fetched');  // Debugging line
+    
         // Iterate over guild members and check last login time
+        console.log('Iterating over guild members...');  // Debugging line
         for (const member of guildData.guild.members) {
             const lastLogin = member.playerData.lastLogin;
-
+            console.log(`Checking last login time for player ${member.playerData.displayname}`);  // Debugging line
+    
             if ((Date.now() - lastLogin) > time) {
                 const offlineTime = Date.now() - lastLogin;
                 const offlineDays = Math.floor(offlineTime / (1000 * 60 * 60 * 24));
@@ -54,6 +62,7 @@ class TestPurgeCommand extends minecraftCommand {
                 await new Promise(resolve => setTimeout(resolve, 1000)); // Add a delay between messages
             }
         }
+        console.log('onCommand finished');  // Debugging line
     }
 }
 
