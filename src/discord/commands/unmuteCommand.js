@@ -23,7 +23,7 @@ module.exports = {
       .setAuthor({ name: "Unmute" })
       .setDescription(`Successfully executed \`/g unmute ${name}\``)
       .setFooter({
-        text: `by @duckysolucky | /help [command] for more information`,
+        text: `/help [command] for more information`,
         iconURL: "https://imgur.com/tgwQJTX.png",
       });
 

@@ -11,7 +11,7 @@ class Embed extends EmbedBuilder {
     super();
 
     this.setFooter({
-      text: `by @duckysolucky | /help [command] for more information`,
+      text: `/help [command] for more information`,
       iconURL: "https://imgur.com/tgwQJTX.png",
     });
 
