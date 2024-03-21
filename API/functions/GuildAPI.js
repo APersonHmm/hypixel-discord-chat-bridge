@@ -7,9 +7,9 @@ const playerCache = new Map();
 async function fetchGuildAPI() {
     const hypixelAPIkey = config.minecraft.API.hypixelAPIkey;
     const guildId = config.minecraft.guild.guildId;
-    console.log("Fetching guild data for guild ID:", guildId); // debug
-
     const guildAPIUrl = `https://api.hypixel.net/v2/guild?key=${hypixelAPIkey}&id=${guildId}`;
+
+    console.log("Guild API URL:", guildAPIUrl); // Debug line
 
     try {
         const response = await axios.get(guildAPIUrl);
@@ -17,12 +17,6 @@ async function fetchGuildAPI() {
         if (response.data.success) {
             const guildData = response.data.guild;
             guildCache.set(guildId, guildData);
-
-            // Fetch player data for each player in the guild
-            for (const member of guildData.members) {
-                await fetchPlayerAPI(member.uuid);
-            }
-
             return guildData;
         } else {
             throw new Error("Failed to fetch guild data from Hypixel API.");
