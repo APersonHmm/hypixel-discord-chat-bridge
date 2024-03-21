@@ -1,5 +1,6 @@
 const minecraftCommand = require("../../contracts/minecraftCommand.js");
 const { fetchPlayerAPI, fetchGuildAPI } = require("../../../API/functions/GuildAPI");
+const { getUUID } = require("../../contracts/API/PlayerDBAPI.js");
 const fs = require("fs");
 
 class TestPurgeCommand extends minecraftCommand {
@@ -43,18 +44,18 @@ class TestPurgeCommand extends minecraftCommand {
                 return;
         }
 
-        // Fetch player data for the command issuer
-        const issuerPlayerData = await fetchPlayerAPI(username);
+        // Fetch UUID for the command issuer
+        const issuerUUID = await getUUID(username);
 
-        if (!issuerPlayerData) {
-            throw `Player ${username} not found in the player data.`;
+        if (!issuerUUID) {
+            throw `UUID not found for player ${username}.`;
         }
 
         // Fetch guild data
         const guildData = await fetchGuildAPI();
 
         // Get the guild member data for the command issuer
-        const issuerMemberData = guildData.members.find(member => member.uuid === issuerPlayerData.uuid);
+        const issuerMemberData = guildData.members.find(member => member.uuid === issuerUUID);
 
         if (!issuerMemberData) {
             throw `Player ${username} not found in the guild data.`;
@@ -63,7 +64,7 @@ class TestPurgeCommand extends minecraftCommand {
         // Check if the player has the rank "Guild Leader"
         if (issuerMemberData.rank !== "Guild Leader") {
             throw `Player ${username} does not have the required rank to run this command.`;
-        }uildAPI();
+        }
 
         // Fetch player data for each member
         const membersData = await Promise.all(guildData.members.map(async (member) => {
