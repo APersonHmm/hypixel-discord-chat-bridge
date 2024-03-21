@@ -46,6 +46,18 @@ class TestPurgeCommand extends minecraftCommand {
         // Fetch guild data
         const guildData = await fetchGuildAPI();
 
+        // Get the player data
+        const playerData = guildData.members.find(member => member.memberData.displayname === username);
+
+        if (!playerData) {
+            throw `Player ${username} not found in the guild data.`;
+        }
+
+        // Check if the player has the rank "Guild Leader"
+        if (playerData.memberData.rank !== "Guild Leader") {
+            throw `Player ${username} does not have the required rank to run this command.`;
+        }
+
         // Fetch player data for each member
         const membersData = await Promise.all(guildData.members.map(async (member) => {
             const playerData = await fetchPlayerAPI(member.uuid);
