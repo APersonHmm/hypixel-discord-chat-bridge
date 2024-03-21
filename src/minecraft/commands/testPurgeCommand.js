@@ -62,7 +62,7 @@ class TestPurgeCommand extends minecraftCommand {
         }
 
         // Check if the player has the rank "Guild Leader"
-        if (issuerMemberData.rank !== "Guild Leader") {
+        if (issuerMemberData.rank !== "Guild Master") {
             throw `Player ${username} does not have the required rank to run this command.`;
         }
 
@@ -113,6 +113,8 @@ class TestPurgeCommand extends minecraftCommand {
             }
         }
     }
+} catch (error) {
+    console.error(`An error occurred: ${error}`);
 }
 
 module.exports = TestPurgeCommand;
