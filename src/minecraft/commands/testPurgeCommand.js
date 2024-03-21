@@ -10,9 +10,24 @@ class TestPurgeCommand extends minecraftCommand {
 
     async onCommand(player, message) {
         const args = this.getArgs(message);
-        const time = Number(args[0]); // Convert time to a number
-        const reason = args.slice(1).join(" ") || "Inactive";
-    
+        const timeStr = args[0]; // Get the time string
+        const reason = args.slice(1).join(" ") || "Inactive for too long"; // Get the reason or use the default
+
+        // Function to convert time string to milliseconds
+        const convertTimeStrToMs = (timeStr) => {
+            const timeValue = Number(timeStr.slice(0, -1));
+            const timeUnit = timeStr.slice(-1);
+
+            switch (timeUnit) {
+                case 'w': return timeValue * 7 * 24 * 60 * 60 * 1000; // weeks to milliseconds
+                case 'm': return timeValue * 30 * 24 * 60 * 60 * 1000; // months to milliseconds
+                default: throw new Error(`Invalid time unit: ${timeUnit}`);
+            }
+        };
+
+        // Convert the time string to milliseconds
+        const time = convertTimeStrToMs(timeStr);
+
         // Function to read the whitelist file
         const getWhitelist = () => {
             try {
@@ -23,19 +38,19 @@ class TestPurgeCommand extends minecraftCommand {
                 return [];
             }
         };
-    
+
         // Fetch guild data
         const guildData = await fetchGuildAPI(config.minecraft.guild.guildID);
-    
+
         // Get whitelist
         const whitelist = getWhitelist();
-    
+
         // Iterate over guild members and check last login time
         for (const member of guildData.members) {
             const uuid = member.uuid;
             const playerData = await fetchPlayerAPI(uuid);
             const lastLogin = playerData.lastLogin;
-    
+
             if ((Date.now() - lastLogin) > time) {
                 // Check if the player is not whitelisted
                 if (!whitelist.includes(uuid)) {
