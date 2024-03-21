@@ -1,6 +1,6 @@
 // GuildAPI.js
 const axios = require("axios");
-const config = require("../config.json");
+const config = require("../../config.json");
 
 const guildCache = new Map();
 const playerCache = new Map();
