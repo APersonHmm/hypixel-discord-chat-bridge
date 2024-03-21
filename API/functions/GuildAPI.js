@@ -6,8 +6,8 @@ const playerCache = new Map();
 
 async function fetchGuildAPI() {
     const hypixelAPIkey = config.minecraft.API.hypixelAPIkey;
-    const guildId = config.minecraft.guild.guildId;
-    const guildAPIUrl = `https://api.hypixel.net/v2/guild?key=${hypixelAPIkey}&id=${guildId}`;
+    const guildId = config.minecraft.guild.GuildID;
+    const guildAPIUrl = `https://api.hypixel.net/v2/guild?key=${hypixelAPIkey}&id=${GuildID}`;
 
     console.log("Guild API URL:", guildAPIUrl); // Debug line
 
