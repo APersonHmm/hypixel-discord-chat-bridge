@@ -1,6 +1,6 @@
 const minecraftCommand = require("../../contracts/minecraftCommand.js");
-const { fetchPlayerAPI } = require("../../../API/functions/GuildAPI");
 const fs = require("fs");
+const path = require("path");
 
 class WhitelistCommand extends minecraftCommand {
     constructor(minecraft) {
@@ -40,29 +40,36 @@ class WhitelistCommand extends minecraftCommand {
                 whitelist = JSON.parse(fs.readFileSync(whitelistFile, 'utf8'));
             }
 
+            // Get the UUID from the apiOutput.json file
+            const apiOutputPath = path.resolve(__dirname, '../../../apiOutput.json');
+            const apiOutput = JSON.parse(fs.readFileSync(apiOutputPath, 'utf8'));
+            const playerData = apiOutput.guild.members.find(member => member.playerData.displayname === playerName);
+
+            if (!playerData) {
+                throw `Player ${playerName} not found in the apiOutput.json file.`;
+            }
+
             if (action === "add") {
-                const playerData = await fetchPlayerAPI(playerName);
-                if (!whitelist.includes(playerData.uuid)) {
-                    whitelist.push(playerData.uuid);
+                if (!whitelist.includes(playerData.playerData.uuid)) {
+                    whitelist.push(playerData.playerData.uuid);
                     fs.writeFileSync(whitelistFile, JSON.stringify(whitelist));
-                    await this.send(`/oc Player ${playerName} has been added to the whitelist.`);
+                    await this.send(`Player ${playerName} has been added to the whitelist.`);
                 } else {
-                    await this.send(`/oc Player ${playerName} is already in the whitelist.`);
+                    await this.send(`Player ${playerName} is already in the whitelist.`);
                 }
             } else if (action === "remove") {
-                const playerData = await fetchPlayerAPI(playerName);
-                const index = whitelist.indexOf(playerData.uuid);
+                const index = whitelist.indexOf(playerData.playerData.uuid);
                 if (index !== -1) {
                     whitelist.splice(index, 1);
                     fs.writeFileSync(whitelistFile, JSON.stringify(whitelist));
-                    await this.send(`/oc Player ${playerName} has been removed from the whitelist.`);
+                    await this.send(`Player ${playerName} has been removed from the whitelist.`);
                 } else {
-                    await this.send(`/oc Player ${playerName} is not in the whitelist.`);
+                    await this.send(`Player ${playerName} is not in the whitelist.`);
                 }
             }
         } catch (error) {
             console.error("Error executing whitelist command:", error);
-            await this.send("/oc An error occurred while executing the command.");
+            await this.send("An error occurred while executing the command.");
         }
     }
 }
