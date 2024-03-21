@@ -1,5 +1,5 @@
 const minecraftCommand = require("../../contracts/minecraftCommand.js");
-const fetchGuildAPI = require("../../../API/functions/GuildAPI");  // Import the fetchGuildAPI function
+const { fetchGuildAPI } = require("../../../API/functions/GuildAPI");  // Import the fetchGuildAPI function
 
 class TestPurgeCommand extends minecraftCommand {
     constructor(minecraft) {
