@@ -50,10 +50,10 @@ class TestAPICommand extends minecraftCommand {
         
             fs.writeFileSync('./apiOutput.json', JSON.stringify(output, null, 2));
             console.log("API data has been written to apiOutput.json."); // Debug line
-            await this.send("API data has been written to apiOutput.json.");
+            await this.send("/oc API data has been written to apiOutput.json.");
         } catch (error) {
             console.error("Error fetching API data:", error);
-            await this.send("An error occurred while fetching API data.");
+            await this.send("/oc An error occurred while fetching API data.");
         }
     }
 }

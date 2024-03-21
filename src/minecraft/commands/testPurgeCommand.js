@@ -1,5 +1,6 @@
+const fs = require('fs');
+const path = require('path');
 const minecraftCommand = require("../../contracts/minecraftCommand.js");
-const { fetchGuildAPI, fetchPlayerAPI } = require("../../../API/functions/GuildAPI");  // Import the fetchGuildAPI and fetchPlayerAPI functions
 
 class TestPurgeCommand extends minecraftCommand {
     constructor(minecraft) {
@@ -23,14 +24,11 @@ class TestPurgeCommand extends minecraftCommand {
     }
 
     async onCommand(username, message) {
-        console.log('onCommand started');  // Debugging line
-    
         // Parse the arguments
         const args = this.getArgs(message);
         const timeArg = args[0] || '1m';  // Default to '1m' if no time argument is provided
         const reason = args[1] || 'No reason provided';  // Default to 'No reason provided' if no reason is provided
-    
-        console.log('timeArg:', timeArg);  // Debugging line
+
         const timeUnit = timeArg.slice(-1);
         let time;
         switch (timeUnit) {
@@ -44,33 +42,22 @@ class TestPurgeCommand extends minecraftCommand {
                 console.log('Invalid time unit. Please use "w" for weeks or "m" for months.');
                 return;
         }
-        console.log('time:', time);  // Debugging line
-    
-        // Fetch guild data
-        console.log('Fetching guild data...');  // Debugging line
-        this.send('/oc Fetching guild data...');  // Debugging line
-        const guildData = await fetchGuildAPI();
-        console.log('Guild data fetched');  // Debugging line
-        this.send('/oc Guild data fetched');  // Debugging line
 
-        console.log('Iterating over guild members...');  // Debugging line
+        // Read guild data from apiOutput.json
+        const guildData = JSON.parse(fs.readFileSync(path.join(__dirname, '../../../apiOutput.json'), 'utf8'));
+
+        // Iterate over guild members and check last login time
         for (const member of guildData.guild.members) {
-            console.log(`Fetching player data for player ${member.uuid}`);  // Debugging line
-            const playerData = await fetchPlayerAPI(member.uuid);
-            console.log(`Player data fetched for player ${member.uuid}`);  // Debugging line
-
-            const lastLogin = playerData.player.lastLogin;
-            console.log(`Checking last login time for player ${playerData.player.displayname}`);  // Debugging line
+            const lastLogin = member.playerData.lastLogin;
 
             if ((Date.now() - lastLogin) > time) {
                 const offlineTime = Date.now() - lastLogin;
                 const offlineDays = Math.floor(offlineTime / (1000 * 60 * 60 * 24));
-                console.log(`Player ${playerData.player.displayname} would be kicked for being offline for ${offlineDays} days`);
-                await this.send(`/oc Player ${playerData.player.displayname} has been offline for ${offlineDays} days`);
+                console.log(`Player ${member.playerData.displayname} would be kicked for being offline for ${offlineDays} days`);
+                await this.minecraft.send(`/oc Player ${member.playerData.displayname} has been offline for ${offlineDays} days`);
                 await new Promise(resolve => setTimeout(resolve, 1000)); // Add a delay between messages
             }
         }
-        console.log('onCommand finished');  // Debugging line
     }
 }
 
