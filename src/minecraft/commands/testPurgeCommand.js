@@ -52,18 +52,17 @@ class TestPurgeCommand extends minecraftCommand {
         // Iterate over guild members and check last login time
         for (const member of guildData.guild.members) {
             const uuid = member.memberData.uuid;
-            const playerData = member.playerData;
-            const lastLogin = playerData.lastLogin;
+            const lastLogin = member.playerData.lastLogin;
 
-            console.log(`Player: ${playerData.displayname}, Last Login: ${new Date(lastLogin).toISOString()}`);
+            console.log(`Player: ${member.playerData.displayname}, Last Login: ${new Date(lastLogin).toISOString()}`);
 
             if ((Date.now() - lastLogin) > time) {
                 // Check if the player is not whitelisted
                 if (!whitelist.includes(uuid)) {
                     const offlineTime = Date.now() - lastLogin;
                     const offlineDays = Math.floor(offlineTime / (1000 * 60 * 60 * 24));
-                    console.log(`Player ${playerData.displayname} would be kicked for being offline for ${offlineDays} days`);
-                    await this.send(`/oc Player ${playerData.displayname} has been offline for ${offlineDays} days`);
+                    console.log(`Player ${member.playerData.displayname} would be kicked for being offline for ${offlineDays} days`);
+                    await this.send(`/oc Player ${member.playerData.displayname} has been offline for ${offlineDays} days`);
                     await new Promise(resolve => setTimeout(resolve, 1000)); // Add a delay between messages
                 }
             }
