@@ -7,6 +7,8 @@ const playerCache = new Map();
 async function fetchGuildAPI() {
     const hypixelAPIkey = config.minecraft.API.hypixelAPIkey;
     const guildId = config.minecraft.guild.guildId;
+    console.log("Fetching guild data for guild ID:", guildId); // debug
+
     const guildAPIUrl = `https://api.hypixel.net/v2/guild?key=${hypixelAPIkey}&id=${guildId}`;
 
     try {
@@ -32,6 +34,7 @@ async function fetchGuildAPI() {
 
 async function fetchPlayerAPI(uuid) {
     const hypixelAPIkey = config.minecraft.API.hypixelAPIkey;
+    console.log("Fetching data for Player UUID:", uuid); // debug
     const playerAPIUrl = `https://api.hypixel.net/v2/player?key=${hypixelAPIkey}&uuid=${uuid}`;
 
     try {
@@ -47,6 +50,7 @@ async function fetchPlayerAPI(uuid) {
     } catch (error) {
         throw new Error("Failed to fetch player data: " + error.message);
     }
+}   }
 }
 
 function isGuildMaster(playerUUID) {

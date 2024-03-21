@@ -51,3 +51,4 @@ class TestAPICommand extends minecraftCommand {
 }
 
 module.exports = TestAPICommand;
+
