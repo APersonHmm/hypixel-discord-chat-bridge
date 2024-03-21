@@ -1,54 +1,120 @@
-// PurgeCommand.js
 const minecraftCommand = require("../../contracts/minecraftCommand.js");
+const { fetchPlayerAPI, fetchGuildAPI } = require("../../../API/functions/GuildAPI");
+const { getUUID } = require("../../contracts/API/PlayerDBAPI.js");
 const fs = require("fs");
-const fetch = require("node-fetch");
-const config = require("../../../config"); // Assuming your config is in this location
-const { fetchPlayerAPI } = require("../../../API/functions/GuildAPI"); // Assuming your fetchPlayerAPI function is exported from this location
 
 class PurgeCommand extends minecraftCommand {
     constructor(minecraft) {
         super(minecraft);
+
         this.name = "purge";
+        this.aliases = [];
+        this.description = "Purge of members based on last login time.";
+        this.options = [
+            {
+                name: "time",
+                description: "Time duration (e.g., '6w' for 6 weeks, '1m' for 1 month)",
+                required: true,
+            },
+            {
+                name: "reason",
+                description: "Reason for the purge",
+                required: true,
+            },
+        ];
     }
 
-    async onCommand(player, message) {
+    async onCommand(username, message) {
+        // Parse the arguments
         const args = this.getArgs(message);
-        const time = Number(args[0]); // Convert time to a number
-        const reason = args.slice(1).join(" ") || "Inactive";
+        const timeArg = args[0] || '1m';  // Default to '1m' if no time argument is provided
+        const reason = args[1] || 'No reason provided';  // Default to 'No reason provided' if no reason is provided
 
-        // Function to read the whitelist file
-        const getWhitelist = () => {
-            try {
-                const whitelistData = fs.readFileSync("./whitelist.json", "utf8");
-                return JSON.parse(whitelistData);
-            } catch (error) {
-                console.error("Error reading whitelist file:", error);
-                return [];
-            }
-        };
+        const timeUnit = timeArg.slice(-1);
+        let time;
+        switch (timeUnit) {
+            case 'w':
+                time = parseInt(timeArg) * 7 * 24 * 60 * 60 * 1000;  // Convert weeks to milliseconds
+                break;
+            case 'm':
+                time = parseInt(timeArg) * 30 * 24 * 60 * 60 * 1000;  // Convert months to milliseconds
+                break;
+            default:
+                console.log('Invalid time unit. Please use "w" for weeks or "m" for months.');
+                return;
+        }
+
+        // Fetch UUID for the command issuer
+        const issuerUUID = await getUUID(username);
+
+        if (!issuerUUID) {
+            this.send (`/oc UUID not found for player ${username}.`);
+        }
 
         // Fetch guild data
-        const guildResponse = await fetch(`https://api.hypixel.net/guild?key=${config.minecraft.API.hypixelAPIkey}&id=${config.minecraft.guild.guildID}`);
-        const guildData = await guildResponse.json();
+        const guildData = await fetchGuildAPI();
 
-        // Get whitelist
-        const whitelist = getWhitelist();
+        // Get the guild member data for the command issuer
+        const issuerMemberData = guildData.members.find(member => member.uuid === issuerUUID);
+
+        if (!issuerMemberData) {
+            this.send (`/oc Player ${username} not found in the guild data.`);
+        }
+
+        // Check if the player has the rank "Guild Leader"
+        if (issuerMemberData.rank !== "Guild Leader") {
+            await this.send(`/oc Player ${username} does not have the required rank to run this command.`);
+            return;
+        }
+
+        // Fetch player data for each member
+        const membersData = await Promise.all(guildData.members.map(async (member) => {
+            const playerData = await fetchPlayerAPI(member.uuid);
+            return {
+                memberData: {
+                    uuid: member.uuid,
+                    rank: member.rank,
+                    joined: member.joined,
+                    expHistory: member.expHistory
+                },
+                playerData: {
+                    id: playerData._id,
+                    uuid: playerData.uuid,
+                    displayname: playerData.displayname,
+                    firstLogin: playerData.firstLogin,
+                    lastLogin: playerData.lastLogin
+                }
+            };
+        }));
+
+        // Write the fetched data to a file
+        const output = {
+            guild: {
+                id: guildData._id,
+                name: guildData.name,
+                members: membersData
+            }
+        };
+        fs.writeFileSync('./apiOutput.json', JSON.stringify(output, null, 2));
+
+        // Read the data from the file
+        const fileData = JSON.parse(fs.readFileSync('./apiOutput.json', 'utf8'));
+        const membersFromFile = fileData.guild.members;
 
         // Iterate over guild members and check last login time
-        for (const member of guildData.guild.members) {
-            const uuid = member.uuid;
-            const playerData = await fetchPlayerAPI(uuid);
-            const lastLogin = playerData.player.lastLogin;
+        for (const member of membersFromFile) {
+            const lastLogin = member.playerData.lastLogin;
 
             if ((Date.now() - lastLogin) > time) {
-                // Check if the player is not whitelisted
-                if (!whitelist.includes(uuid)) {
-                    await this.send(`/g kick ${playerData.player.displayname} "${reason}"`);
-                    await new Promise(resolve => setTimeout(resolve, 1000)); // Add a delay between kicks
-                }
+                const offlineTime = Date.now() - lastLogin;
+                const offlineDays = Math.floor(offlineTime / (1000 * 60 * 60 * 24));
+                console.log(`Player ${member.playerData.displayname} would be kicked for being offline for ${offlineDays} days`);
+                await this.send(`/oc Player ${member.playerData.displayname} has been offline for ${offlineDays} days`);
+                await this.send(`/g kick ${member.playerData.displayname} ${reason} `);
+                await new Promise(resolve => setTimeout(resolve, 1000)); // Add a delay between messages
             }
         }
     }
-}
+} 
 
 module.exports = PurgeCommand;
