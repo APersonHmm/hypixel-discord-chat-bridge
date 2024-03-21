@@ -1,6 +1,6 @@
 const minecraftCommand = require("../../contracts/minecraftCommand.js");
 const fs = require("fs");
-const { fetchPlayerAPI, fetchGuildAPI, isGuildMaster } = require("../../../API/functions/GuildAPI");
+const { fetchPlayerAPI, fetchGuildAPI } = require("../../../API/functions/GuildAPI");
 
 class TestPurgeCommand extends minecraftCommand {
     constructor(minecraft) {
@@ -10,6 +10,10 @@ class TestPurgeCommand extends minecraftCommand {
 
     async onCommand(player, message) {
         const args = this.getArgs(message);
+        if (!args[0]) {
+            return this.send("You must provide a time argument in the format '6w' or '1m'.");
+        }
+
         const timeStr = args[0]; // Get the time string
         const reason = args.slice(1).join(" ") || "Inactive for too long"; // Get the reason or use the default
 
@@ -40,7 +44,7 @@ class TestPurgeCommand extends minecraftCommand {
         };
 
         // Fetch guild data
-        const guildData = await fetchGuildAPI(config.minecraft.guild.guildID);
+        const guildData = await fetchGuildAPI();
 
         // Get whitelist
         const whitelist = getWhitelist();
