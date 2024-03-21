@@ -61,8 +61,8 @@ class PurgeCommand extends minecraftCommand {
             this.send (`/oc Player ${username} not found in the guild data.`);
         }
 
-        // Check if the player has the rank "Guild Leader"
-        if (issuerMemberData.rank !== "Guild Leader") {
+        // Check if the player has the rank "Guild Master"
+        if (issuerMemberData.rank !== "Guild Master") {
             await this.send(`/oc Player ${username} does not have the required rank to run this command.`);
             return;
         }
