@@ -91,6 +91,5 @@ class TestPurgeCommand extends minecraftCommand {
         }
         console.log('onCommand finished');  // Debugging line
     }
-}
 
 module.exports = TestPurgeCommand;
