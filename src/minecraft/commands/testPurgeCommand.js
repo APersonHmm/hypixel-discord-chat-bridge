@@ -50,6 +50,7 @@ class TestPurgeCommand extends minecraftCommand {
         console.log('Fetching guild data...');  // Debugging line
         this.send('/oc Fetching guild data...');  // Debugging line
         const guildData = await fetchGuildAPI();
+        console.log(guildData);  // Debugging line
         console.log('Guild data fetched');  // Debugging line
         this.send('/oc Guild data fetched');  // Debugging line
     
@@ -58,7 +59,7 @@ class TestPurgeCommand extends minecraftCommand {
         for (const member of guildData.guild.members) {
             const lastLogin = member.playerData.lastLogin;
             console.log(`Checking last login time for player ${member.playerData.displayname}`);  // Debugging line
-    
+        
             if ((Date.now() - lastLogin) > time) {
                 const offlineTime = Date.now() - lastLogin;
                 const offlineDays = Math.floor(offlineTime / (1000 * 60 * 60 * 24));
