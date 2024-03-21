@@ -1,5 +1,6 @@
 const minecraftCommand = require("../../contracts/minecraftCommand.js");
 const { fetchPlayerAPI, fetchGuildAPI } = require("../../../API/functions/GuildAPI");
+const fs = require("fs");
 
 class TestPurgeCommand extends minecraftCommand {
     constructor(minecraft) {
@@ -65,8 +66,22 @@ class TestPurgeCommand extends minecraftCommand {
             };
         }));
 
+        // Write the fetched data to a file
+        const output = {
+            guild: {
+                id: guildData._id,
+                name: guildData.name,
+                members: membersData
+            }
+        };
+        fs.writeFileSync('./apiOutput.json', JSON.stringify(output, null, 2));
+
+        // Read the data from the file
+        const fileData = JSON.parse(fs.readFileSync('./apiOutput.json', 'utf8'));
+        const membersFromFile = fileData.guild.members;
+
         // Iterate over guild members and check last login time
-        for (const member of membersData) {
+        for (const member of membersFromFile) {
             const lastLogin = member.playerData.lastLogin;
 
             if ((Date.now() - lastLogin) > time) {
