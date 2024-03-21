@@ -4,8 +4,9 @@ const config = require('../../config');
 const guildCache = new Map();
 const playerCache = new Map();
 
-async function fetchGuildAPI(guildId) {
+async function fetchGuildAPI() {
     const hypixelAPIkey = config.minecraft.API.hypixelAPIkey;
+    const guildId = config.minecraft.guild.guildId;
     const guildAPIUrl = `https://api.hypixel.net/v2/guild?key=${hypixelAPIkey}&id=${guildId}`;
 
     try {
