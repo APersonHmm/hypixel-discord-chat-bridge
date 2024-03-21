@@ -28,7 +28,7 @@ class PurgeCommand extends minecraftCommand {
         // Parse the arguments
         const args = this.getArgs(message);
         const timeArg = args[0] || '1m';  // Default to '1m' if no time argument is provided
-        const reason = args[1] || 'No reason provided';  // Default to 'No reason provided' if no reason is provided
+        const reason = args[1] || 'Offline for too long';  // Default to 'No reason provided' if no reason is provided
 
         const timeUnit = timeArg.slice(-1);
         let time;
