@@ -1,5 +1,5 @@
 const minecraftCommand = require("../../contracts/minecraftCommand.js");
-const { fetchGuildAPI } = require("../../../API/functions/GuildAPI");  // Import the fetchGuildAPI function
+const { fetchGuildAPI, fetchPlayerAPI } = require("../../../API/functions/GuildAPI");  // Import the fetchGuildAPI and fetchPlayerAPI functions
 
 class TestPurgeCommand extends minecraftCommand {
     constructor(minecraft) {
@@ -50,21 +50,23 @@ class TestPurgeCommand extends minecraftCommand {
         console.log('Fetching guild data...');  // Debugging line
         this.send('/oc Fetching guild data...');  // Debugging line
         const guildData = await fetchGuildAPI();
-        console.log(guildData);  // Debugging line
         console.log('Guild data fetched');  // Debugging line
         this.send('/oc Guild data fetched');  // Debugging line
-    
-        // Iterate over guild members and check last login time
+
         console.log('Iterating over guild members...');  // Debugging line
         for (const member of guildData.guild.members) {
-            const lastLogin = member.playerData.lastLogin;
-            console.log(`Checking last login time for player ${member.playerData.displayname}`);  // Debugging line
-        
+            console.log(`Fetching player data for player ${member.uuid}`);  // Debugging line
+            const playerData = await fetchPlayerAPI(member.uuid);
+            console.log(`Player data fetched for player ${member.uuid}`);  // Debugging line
+
+            const lastLogin = playerData.player.lastLogin;
+            console.log(`Checking last login time for player ${playerData.player.displayname}`);  // Debugging line
+
             if ((Date.now() - lastLogin) > time) {
                 const offlineTime = Date.now() - lastLogin;
                 const offlineDays = Math.floor(offlineTime / (1000 * 60 * 60 * 24));
-                console.log(`Player ${member.playerData.displayname} would be kicked for being offline for ${offlineDays} days`);
-                await this.send(`/oc Player ${member.playerData.displayname} has been offline for ${offlineDays} days`);
+                console.log(`Player ${playerData.player.displayname} would be kicked for being offline for ${offlineDays} days`);
+                await this.send(`/oc Player ${playerData.player.displayname} has been offline for ${offlineDays} days`);
                 await new Promise(resolve => setTimeout(resolve, 1000)); // Add a delay between messages
             }
         }
