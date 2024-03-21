@@ -110,7 +110,7 @@ class TestPurgeCommand extends minecraftCommand {
                 const offlineDays = Math.floor(offlineTime / (1000 * 60 * 60 * 24));
                 console.log(`Player ${member.playerData.displayname} would be kicked for being offline for ${offlineDays} days`);
                 await this.send(`/oc Player ${member.playerData.displayname} has been offline for ${offlineDays} days`);
-                await new Promise(resolve => setTimeout(resolve, 1000)); // Add a delay between messages
+                await new Promise(resolve => setTimeout(resolve, 2000)); // Add a delay between messages
             }
         }
     }
