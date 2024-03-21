@@ -9,16 +9,10 @@ class TestPurgeCommand extends minecraftCommand {
     }
 
     async onCommand(player, message) {
-        // Check if the player is a guild master
-        if (!await isGuildMaster(player.uuid)) {
-            await this.send("You must be a Guild Master to use this command.");
-            return;
-        }
-
         const args = this.getArgs(message);
         const time = Number(args[0]); // Convert time to a number
         const reason = args.slice(1).join(" ") || "Inactive";
-
+    
         // Function to read the whitelist file
         const getWhitelist = () => {
             try {
@@ -29,19 +23,19 @@ class TestPurgeCommand extends minecraftCommand {
                 return [];
             }
         };
-
+    
         // Fetch guild data
         const guildData = await fetchGuildAPI(config.minecraft.guild.guildID);
-
+    
         // Get whitelist
         const whitelist = getWhitelist();
-
+    
         // Iterate over guild members and check last login time
         for (const member of guildData.members) {
             const uuid = member.uuid;
             const playerData = await fetchPlayerAPI(uuid);
             const lastLogin = playerData.lastLogin;
-
+    
             if ((Date.now() - lastLogin) > time) {
                 // Check if the player is not whitelisted
                 if (!whitelist.includes(uuid)) {
