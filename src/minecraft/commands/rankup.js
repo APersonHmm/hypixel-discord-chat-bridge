@@ -77,4 +77,4 @@ class RankupCommand extends minecraftCommand {
     }
 }
 
-export default RankupCommand;
+module.exports = RankupCommand;
