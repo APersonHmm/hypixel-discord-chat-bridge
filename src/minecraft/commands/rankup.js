@@ -55,7 +55,7 @@ class RankupCommand extends minecraftCommand {
                     const rankUpCommand = `/g setrank ${username} Shadow Adviser`;
                     this.send(rankUpCommand);
                 } else {
-                    this.send(`/gc ${username} already has the highest rank they meet requirements for.`);
+                    this.send(`/gc ${username} is already at the highest rank possible. For further rankup, contact Guild-Leadership.`);
                 }
             } else if (skillAverage >= 28 && catacombsLevel >= 24 && senitherW >= 2000) {
                 if (currentRank !== ranks[1]) {
