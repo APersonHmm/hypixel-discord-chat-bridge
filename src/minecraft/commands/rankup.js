@@ -20,8 +20,6 @@ class RankupCommand extends minecraftCommand {
                 required: false,
             },
         ];
-;
-        }
     } 
 
     async onCommand(username, message) {
@@ -46,40 +44,34 @@ class RankupCommand extends minecraftCommand {
             const senitherW = profile.senither.total;
             const catacombsLevel = dungeons.catacombs.skill.levelWithProgress || 0;
 
-            // Check if debug mode is enabled
-            if (this.debugMode) {
-                console.log(`[DEBUG] Skill Average: ${skillAverage}, Catacombs Level: ${catacombsLevel}, Senither Weight: ${senitherW}`);
-            }
-
-            try {
-                // Fetch the player's current rank
-                const currentRank = await fetchPlayerRank(username);
-            
-                // Define the ranks in order of highest to lowest
-                const ranks = ["Shadow Adviser", "Shadow Sentry"];
-            
-                // Check rank requirements and execute rank-up command if met
-                if (skillAverage >= 42 && catacombsLevel >= 36 && senitherW >= 7000) {
-                    if (currentRank !== ranks[0]) {
-                        const rankUpCommand = `/g setrank ${username} Shadow Adviser`;
-                        this.send(rankUpCommand);
-                    } else {
-                        this.send(`[INFO] ${username} already has the highest rank they meet requirements for.`);
-                    }
-                } else if (skillAverage >= 28 && catacombsLevel >= 24 && senitherW >= 2000) {
-                    if (currentRank !== ranks[1]) {
-                        const rankUpCommand = `/g setrank ${username} Shadow Sentry`;
-                        this.send(rankUpCommand);
-                    } else {
-                        this.send(`[INFO] ${username} already has the highest rank they meet requirements for.`);
-                    }
+            // Fetch the player's current rank
+            const currentRank = await fetchPlayerRank(username);
+        
+            // Define the ranks in order of highest to lowest
+            const ranks = ["Shadow Adviser", "Shadow Sentry"];
+        
+            // Check rank requirements and execute rank-up command if met
+            if (skillAverage >= 42 && catacombsLevel >= 36 && senitherW >= 7000) {
+                if (currentRank !== ranks[0]) {
+                    const rankUpCommand = `/g setrank ${username} Shadow Adviser`;
+                    this.send(rankUpCommand);
                 } else {
-                    this.send(`[INFO] ${username} does not meet the requirements for a rank-up.`);
+                    this.send(`[INFO] ${username} already has the highest rank they meet requirements for.`);
                 }
-            } catch (error) {
-                this.send(`[ERROR] ${error}`);
+            } else if (skillAverage >= 28 && catacombsLevel >= 24 && senitherW >= 2000) {
+                if (currentRank !== ranks[1]) {
+                    const rankUpCommand = `/g setrank ${username} Shadow Sentry`;
+                    this.send(rankUpCommand);
+                } else {
+                    this.send(`[INFO] ${username} already has the highest rank they meet requirements for.`);
+                }
+            } else {
+                this.send(`[INFO] ${username} does not meet the requirements for a rank-up.`);
             }
-    }        
+        } catch (error) {
+            this.send(`[ERROR] ${error}`);
+        }
+    }
 }
 
 module.exports = RankupCommand;
