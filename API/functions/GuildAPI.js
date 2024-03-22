@@ -1,6 +1,6 @@
 const axios = require('axios');
 const config = require('../../config');
-const { getUUID } = require("../../contracts/API/PlayerDBAPI.js");
+const { getUUID } = require("../stats/PlayerDBAPI.js");
 
 
 const guildCache = new Map();
