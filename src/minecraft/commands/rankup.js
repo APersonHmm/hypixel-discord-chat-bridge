@@ -42,7 +42,7 @@ class RankupCommand extends minecraftCommand {
             ).toFixed(2);
 
             const senitherW = profile.senither.total;
-            const catacombsLevel = dungeons.catacombs.skill.levelWithProgress || 0;
+            const catacombsLevel = dungeons && dungeons.catacombs && dungeons.catacombs.skill ? dungeons.catacombs.skill.levelWithProgress : 0;
 
             // Fetch the player's current rank
             const currentRank = await fetchPlayerRank(username);
