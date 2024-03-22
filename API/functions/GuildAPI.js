@@ -47,6 +47,28 @@ async function fetchPlayerAPI(uuid) {
 }   
 
 
+async function fetchPlayerRank(username) {
+    // Fetch UUID for the command issuer
+    const issuerUUID = await getUUID(username);
+
+    if (!issuerUUID) {
+        throw new Error(`UUID not found for player ${username}.`);
+    }
+
+    // Fetch guild data
+    const guildData = await fetchGuildAPI();
+
+    // Get the guild member data for the command issuer
+    const issuerMemberData = guildData.members.find(member => member.uuid === issuerUUID);
+
+    if (!issuerMemberData) {
+        throw new Error(`Player ${username} not found in the guild data.`);
+    }
+
+    // Return the rank of the player
+    return issuerMemberData.rank;
+}
+
 function isGuildMaster(playerUUID) {
     const guildData = guildCache.get(config.minecraft.guild.guildID);
     if (!guildData) {
@@ -63,4 +85,4 @@ function isGuildMaster(playerUUID) {
     return false;
 }
 
-module.exports = { fetchPlayerAPI, fetchGuildAPI, isGuildMaster };
+module.exports = { fetchPlayerAPI, fetchGuildAPI, isGuildMaster, fetchPlayerRank };
