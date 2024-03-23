@@ -48,7 +48,7 @@ class warpoutCommand extends minecraftCommand {
 
         // Check if the player has an acceptable rank
         if (!acceptableRanks.includes(issuerMemberData.rank)) {
-            await this.send(`/oc Player ${username} does not have the required rank to run this command.`);
+            await this.send(`/gc Player ${username} does not have the required rank to run this command.`);
             return;
         }    
 
