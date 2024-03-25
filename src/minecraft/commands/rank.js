@@ -11,7 +11,7 @@ class RankUpCommand extends minecraftCommand {
     this.messages = [
       "To to see if you meet the reqs run /guild-requirements in Bot-Commands Channel in our Guild Discord",
       "Requirements are as Follows :",
-      "Shadow Novice : Simply Exist",
+      "Shadow Novice : Simply Exist + Have API ON !",
       "Shadow Sentry : SA 28 / C24 / 2k Senither Weight",
       "Shadow Adviser : SA 42 / C36 / 7k Senither Weight",
       "If you meet any of the requirements open a ticket in discord or let a Council member know",
