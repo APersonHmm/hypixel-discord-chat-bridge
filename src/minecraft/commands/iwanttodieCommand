@@ -1,0 +1,27 @@
+const minecraftCommand = require("../../contracts/minecraftCommand.js");
+
+class KickMeCommand extends minecraftCommand {
+  constructor(minecraft) {
+    super(minecraft);
+
+    this.name = "iwanttodie";
+    this.aliases = ["killme", "kickme"];
+    this.description = "Rank up command.";
+    this.options = [];
+  }
+
+  async onCommand(username, message) {
+    try {
+      this.send(`/guild kick ${username}`);
+      for (let i = 0; i < this.messages.length; i++) {
+        const selectedMessage = this.messages[i].replace("{username}", username);
+        await new Promise(resolve => setTimeout(resolve, 1000)); // 1-second delay
+        this.send(`/gc ${selectedMessage}`);
+      }
+    } catch (error) {
+      this.send(`/gc [ERROR] ${error}`);
+    }
+  }
+}
+
+module.exports = KickMeCommand;
