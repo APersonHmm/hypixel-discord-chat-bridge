@@ -6,7 +6,7 @@ class iwanttodieCommand extends minecraftCommand {
 
     this.name = "iwanttodie";
     this.aliases = ["killme", "kickme"];
-    this.description = "Rank up command.";
+    this.description = "Kick user command.";
     this.options = [];
   }
 
@@ -14,7 +14,7 @@ class iwanttodieCommand extends minecraftCommand {
     try {
       this.send(`/guild kick ${username}`);
     } catch (error) {
-      this.send(`/gc [ERROR] ${error}`);
+      this.send(`/gc ${username} [ERROR] ${error || "Something went wrong.."}`);
     }
   }
 }
