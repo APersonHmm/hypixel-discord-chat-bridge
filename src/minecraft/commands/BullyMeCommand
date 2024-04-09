@@ -2,17 +2,15 @@ const minecraftCommand = require("../../contracts/minecraftCommand.js");
 const { getLatestProfile } = require("../../../API/functions/getLatestProfile.js");
 const getSkills = require("../../../API/stats/skills.js");
 const getDungeons = require("../../../API/stats/dungeons.js");
-const getWeight = require("../../../API/stats/weight.js");
 const { formatUsername } = require("../../contracts/helperFunctions.js");
-
 
 class BullyMeCommand extends minecraftCommand {
     constructor(minecraft) {
         super(minecraft);
 
         this.name = "bullyme";
-        this.aliases = ["blameuser", "blameuserstats", "blame", "blamestats"];
-        this.description = "Blame user for their stats.";
+        this.aliases = ["bullymee"];
+        this.description = "Bully me if my stats are too low.";
         this.options = [
             {
                 name: "username",
@@ -21,14 +19,9 @@ class BullyMeCommand extends minecraftCommand {
             },
         ];
 
-        // Configuration for thresholds
+        // Thresholds for each stat
         this.thresholds = {
-            skillAverage: 30,
-            senitherW: 2000,
-            catacombsLevel: 34,
-            farming: 35,
-            mining: 35,
-            combat: 50,
+            mining: 50,
             foraging: 60,
             fishing: 30,
             enchanting: 60,
@@ -41,7 +34,7 @@ class BullyMeCommand extends minecraftCommand {
 
         // Array of possible blame messages
         this.blameMessages = [
-            "Your ${stat} is too low! Stop beeing lazy!",
+            "Your ${stat} is too low! Stop being lazy!",
             "You need to work on your ${stat} u monke!",
             "Your ${stat} is not up to par! Get to work!",
             // Add more messages as needed
@@ -57,33 +50,30 @@ class BullyMeCommand extends minecraftCommand {
     async onCommand(username, message) {
         try {
             username = this.getArgs(message)[0] || username;
+            console.log(`Username: ${username}`); // Debug: print the username
+
             const data = await getLatestProfile(username);
+            console.log(`Data: ${JSON.stringify(data)}`); // Debug: print the data
 
             username = formatUsername(data.profileData?.displayname || username);
+            console.log(`Formatted Username: ${username}`); // Debug: print the formatted username
 
-            const profile = getWeight(data.profile, data.uuid);
             const dungeons = getDungeons(data.playerRes, data.profile);
+            console.log(`Dungeons: ${JSON.stringify(dungeons)}`); // Debug: print the dungeons
+
             const skills = getSkills(data.profile);
-
-            const skillAverage = (
-                Object.keys(skills)
-                    .filter((skill) => !["runecrafting", "social"].includes(skill))
-                    .map((skill) => skills[skill].levelWithProgress || 0)
-                    .reduce((a, b) => a + b, 0) /
-                (Object.keys(skills).length - 2)
-            ).toFixed(2);
-
-            const senitherW = profile.senither.total;
-            const catacombsLevel = dungeons && 'catacombs' in dungeons && dungeons.catacombs && dungeons.catacombs.skill ? dungeons.catacombs.skill.levelWithProgress : 0;
+            console.log(`Skills: ${JSON.stringify(skills)}`); // Debug: print the skills
 
             // Check if the user's stats are below the thresholds
             for (let stat in this.thresholds) {
                 if (skills[stat] && skills[stat].levelWithProgress < this.thresholds[stat]) {
-                    this.send(`/gc ${username}, ${this.getRandomBlameMessage(stat)}`);
+                    const blameMessage = this.getRandomBlameMessage(stat);
+                    console.log(`Blame Message: ${blameMessage}`); // Debug: print the blame message
+                    this.send(`/gc ${username}, ${blameMessage}`);
                 }
             }
         } catch (error) {
-            console.error(error);
+            console.error(`Error: ${error}`); // Debug: print the error
         }
     }
 }
