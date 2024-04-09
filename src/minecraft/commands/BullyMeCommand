@@ -1,16 +1,15 @@
 const minecraftCommand = require("../../contracts/minecraftCommand.js");
 const { getLatestProfile } = require("../../../API/functions/getLatestProfile.js");
 const getSkills = require("../../../API/stats/skills.js");
-const getDungeons = require("../../../API/stats/dungeons.js");
 const { formatUsername } = require("../../contracts/helperFunctions.js");
 
-class BullyMeCommand extends minecraftCommand {
+class BlameCommand extends minecraftCommand {
     constructor(minecraft) {
         super(minecraft);
 
-        this.name = "bullyme";
-        this.aliases = ["bullymee"];
-        this.description = "Bully me if my stats are too low.";
+        this.name = "blame";
+        this.aliases = ["blamee"];
+        this.description = "Blames the player if their stats are too low.";
         this.options = [
             {
                 name: "username",
@@ -21,7 +20,9 @@ class BullyMeCommand extends minecraftCommand {
 
         // Thresholds for each stat
         this.thresholds = {
+            farming: 50,
             mining: 50,
+            combat: 60,
             foraging: 60,
             fishing: 30,
             enchanting: 60,
@@ -34,17 +35,17 @@ class BullyMeCommand extends minecraftCommand {
 
         // Array of possible blame messages
         this.blameMessages = [
-            "Your ${stat} is too low! Stop being lazy!",
-            "You need to work on your ${stat} u monke!",
-            "Your ${stat} is not up to par! Get to work!",
+            "Your ${stat} is too low! Stop being lazy! Imagine being only ${statLevel} ",
+            "You need to work on your ${stat} u monke! ${statLevel} Only ....",
+            "Your ${stat} is not up to par! Get to work! its only ${statLevel} ",
             // Add more messages as needed
         ];
     } 
 
     // Function to get a random blame message
-    getRandomBlameMessage(stat) {
+    getRandomBlameMessage(stat, statLevel) {
         const randomIndex = Math.floor(Math.random() * this.blameMessages.length);
-        return this.blameMessages[randomIndex].replace('${stat}', stat);
+        return this.blameMessages[randomIndex].replace('${stat}', stat).replace('${statLevel}', statLevel);
     }
 
     async onCommand(username, message) {
@@ -58,16 +59,13 @@ class BullyMeCommand extends minecraftCommand {
             username = formatUsername(data.profileData?.displayname || username);
             console.log(`Formatted Username: ${username}`); // Debug: print the formatted username
 
-            const dungeons = getDungeons(data.playerRes, data.profile);
-            console.log(`Dungeons: ${JSON.stringify(dungeons)}`); // Debug: print the dungeons
-
             const skills = getSkills(data.profile);
             console.log(`Skills: ${JSON.stringify(skills)}`); // Debug: print the skills
 
             // Check if the user's stats are below the thresholds
             for (let stat in this.thresholds) {
-                if (skills[stat] && skills[stat].levelWithProgress < this.thresholds[stat]) {
-                    const blameMessage = this.getRandomBlameMessage(stat);
+                if (skills[stat] && skills[stat].level < this.thresholds[stat]) {
+                    const blameMessage = this.getRandomBlameMessage(stat, skills[stat].level);
                     console.log(`Blame Message: ${blameMessage}`); // Debug: print the blame message
                     this.send(`/gc ${username}, ${blameMessage}`);
                 }
@@ -78,4 +76,4 @@ class BullyMeCommand extends minecraftCommand {
     }
 }
 
-module.exports = BullyMeCommand;
+module.exports = BlameCommand;
