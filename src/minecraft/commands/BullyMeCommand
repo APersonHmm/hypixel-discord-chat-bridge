@@ -87,3 +87,5 @@ class BullyMeCommand extends minecraftCommand {
         }
     }
 }
+
+module.exports = BullyMeCommand;
