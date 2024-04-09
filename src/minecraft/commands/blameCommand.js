@@ -1,7 +1,8 @@
 const minecraftCommand = require("../../contracts/minecraftCommand.js");
+const { formatUsername } = require("../../contracts/helperFunctions.js");
 const { getLatestProfile } = require("../../../API/functions/getLatestProfile.js");
 const getSkills = require("../../../API/stats/skills.js");
-const { formatUsername } = require("../../contracts/helperFunctions.js");
+const getDungeons = require("../../../API/stats/dungeons.js");
 
 class BlameCommand extends minecraftCommand {
     constructor(minecraft) {
@@ -31,6 +32,7 @@ class BlameCommand extends minecraftCommand {
             runecrafting: 20,
             social: 10,
             taming: 50,
+            catacombs: 34,
         };
 
         // Array of possible blame messages
@@ -38,7 +40,13 @@ class BlameCommand extends minecraftCommand {
             "Your ${stat} is too low! Stop being lazy! Imagine being only ${statLevel} ",
             "You need to work on your ${stat} u monke! ${statLevel} Only ....",
             "Your ${stat} is not up to par! Get to work! its only ${statLevel} ",
-            // Add more messages as needed
+            "Do you even ${stat}, bro? Your level is just ${statLevel}!",
+            "I've seen snails with higher ${stat} than your ${statLevel}!",
+            "Your ${stat} level is ${statLevel}? Are you even trying?",
+            "Wow, ${statLevel} in ${stat}? My grandma has higher stats than you!",
+            "Your ${stat} level is so low, it's almost cute. Almost. It's ${statLevel}.",
+            "Is your ${stat} level only ${statLevel}? You must be new here.",
+            "Your ${stat} level is ${statLevel}. Do you need a tutorial?",
         ];
     } 
 
@@ -52,21 +60,26 @@ class BlameCommand extends minecraftCommand {
         try {
             username = this.getArgs(message)[0] || username;
             console.log(`Username: ${username}`); // Debug: print the username
+
+            username = formatUsername(data.profileData?.displayname || username);
     
             const data = await getLatestProfile(username);
-            console.log(`Data: ${JSON.stringify(data)}`); // Debug: print the data
-    
-            username = formatUsername(data.profileData?.displayname || username);
-            console.log(`Formatted Username: ${username}`); // Debug: print the formatted username
     
             const skills = getSkills(data.profile);
             console.log(`Skills: ${JSON.stringify(skills)}`); // Debug: print the skills
+
+            const dungeons = getDungeons(data.profile);
+            console.log(`Dungeons: ${JSON.stringify(dungeons)}`); // Debug: print the dungeons
+    
     
             // Collect all stats that are below their thresholds
             let lowStats = [];
             for (let stat in this.thresholds) {
                 if (skills[stat] && skills[stat].level < this.thresholds[stat]) {
                     lowStats.push({ stat: stat, level: skills[stat].level });
+                }
+                else if (dungeons[stat] && dungeons[stat].level < this.thresholds[stat]) {
+                    lowStats.push({ stat: stat, level: dungeons[stat].level });
                 }
             }
     
