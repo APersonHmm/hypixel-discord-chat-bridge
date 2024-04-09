@@ -51,7 +51,7 @@ class RankupCommand extends minecraftCommand {
         
             // Check rank requirements and execute rank-up command if met
             if (currentRank == ranks[0]) {
-                this.send('/gc ${username} is already a Council Member u monkey');     
+                this.send(`/gc ${username} is already a Council Member u monkey`);     
             } else if (skillAverage >= 42 && catacombsLevel >= 36 && senitherW >= 7000) {
                 if (currentRank !== ranks[1]) {
                     const rankUpCommand = `/g setrank ${username} Shadow Adviser`;
