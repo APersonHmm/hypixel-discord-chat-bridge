@@ -47,18 +47,20 @@ class RankupCommand extends minecraftCommand {
             const currentRank = await fetchPlayerRank(username);
         
             // Define the ranks in order of highest to lowest
-            const ranks = ["Shadow Adviser", "Shadow Sentry"];
+            const ranks = ["Shadow Council","Shadow Adviser", "Shadow Sentry"];
         
             // Check rank requirements and execute rank-up command if met
-            if (skillAverage >= 42 && catacombsLevel >= 36 && senitherW >= 7000) {
-                if (currentRank !== ranks[0]) {
+            if (currentRank == ranks[0]) {
+                this.send('/gc ${username} is already a Council Member u monkey');     
+            } else if (skillAverage >= 42 && catacombsLevel >= 36 && senitherW >= 7000) {
+                if (currentRank !== ranks[1]) {
                     const rankUpCommand = `/g setrank ${username} Shadow Adviser`;
                     this.send(rankUpCommand);
                 } else {
                     this.send(`/gc ${username} is already at the highest rank possible. For further rankup, contact Guild-Leadership.`);
                 }
             } else if (skillAverage >= 28 && catacombsLevel >= 24 && senitherW >= 2000) {
-                if (currentRank !== ranks[1]) {
+                if (currentRank !== ranks[2]) {
                     const rankUpCommand = `/g setrank ${username} Shadow Sentry`;
                     this.send(rankUpCommand);
                 } else {
@@ -67,10 +69,8 @@ class RankupCommand extends minecraftCommand {
                 }
             } else {
                 this.send(`/gc ${username} does not meet the requirements for a rank-up.`);
-                setTimeout(() => {
-                    this.send(`/gc Next Rank | Skill Average : ${skillAverage}/28 | Catacombs : ${catacombsLevel}/24 | Weight : ${senitherW}/2000 .`);
-                }, 1000);
-            }
+                this.send(`/gc Next Rank | Skill Average : ${skillAverage}/28 | Catacombs : ${catacombsLevel}/24 | Weight : ${senitherW}/2000 .`);                 
+                }
         } catch (error) {
             this.send(`/gc [ERROR] ${error}`);
         }
