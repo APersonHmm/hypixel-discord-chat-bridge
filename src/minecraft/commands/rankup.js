@@ -65,10 +65,12 @@ class RankupCommand extends minecraftCommand {
                     this.send(rankUpCommand);
                 } else {
                     this.send(`/gc ${username} already has the highest rank they meet requirements for.`);
+                    await this.delay(1000);
                     this.send(`/gc Next Rank | Skill Average : ${skillAverage}/42 | Catacombs : ${catacombsLevel}/36 | Weight : ${senitherW}/7000 .`);
                 }
             } else {
                 this.send(`/gc ${username} does not meet the requirements for a rank-up.`);
+                await this.delay(1000);
                 this.send(`/gc Next Rank | Skill Average : ${skillAverage}/28 | Catacombs : ${catacombsLevel}/24 | Weight : ${senitherW}/2000 .`);                 
                 }
         } catch (error) {
