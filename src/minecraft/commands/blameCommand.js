@@ -52,23 +52,31 @@ class BlameCommand extends minecraftCommand {
         try {
             username = this.getArgs(message)[0] || username;
             console.log(`Username: ${username}`); // Debug: print the username
-
+    
             const data = await getLatestProfile(username);
             console.log(`Data: ${JSON.stringify(data)}`); // Debug: print the data
-
+    
             username = formatUsername(data.profileData?.displayname || username);
             console.log(`Formatted Username: ${username}`); // Debug: print the formatted username
-
+    
             const skills = getSkills(data.profile);
             console.log(`Skills: ${JSON.stringify(skills)}`); // Debug: print the skills
-
-            // Check if the user's stats are below the thresholds
+    
+            // Collect all stats that are below their thresholds
+            let lowStats = [];
             for (let stat in this.thresholds) {
                 if (skills[stat] && skills[stat].level < this.thresholds[stat]) {
-                    const blameMessage = this.getRandomBlameMessage(stat, skills[stat].level);
-                    console.log(`Blame Message: ${blameMessage}`); // Debug: print the blame message
-                    this.send(`/gc ${username}, ${blameMessage}`);
+                    lowStats.push({ stat: stat, level: skills[stat].level });
                 }
+            }
+    
+            // If there are any low stats, randomly select one and send a blame message for it
+            if (lowStats.length > 0) {
+                const randomIndex = Math.floor(Math.random() * lowStats.length);
+                const { stat, level } = lowStats[randomIndex];
+                const blameMessage = this.getRandomBlameMessage(stat, level);
+                console.log(`Blame Message: ${blameMessage}`); // Debug: print the blame message
+                this.send(`/gc ${username}, ${blameMessage}`);
             }
         } catch (error) {
             console.error(`Error: ${error}`); // Debug: print the error
