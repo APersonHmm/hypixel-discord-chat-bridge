@@ -60,10 +60,10 @@ class BlameCommand extends minecraftCommand {
         try {
             username = this.getArgs(message)[0] || username;
             console.log(`Username: ${username}`); // Debug: print the username
-
-            username = formatUsername(data.profileData?.displayname || username);
     
             const data = await getLatestProfile(username);
+
+            username = formatUsername(data.profileData?.displayname || username);
     
             const skills = getSkills(data.profile);
             console.log(`Skills: ${JSON.stringify(skills)}`); // Debug: print the skills
