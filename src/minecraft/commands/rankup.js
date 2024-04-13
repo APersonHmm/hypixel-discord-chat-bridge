@@ -52,24 +52,32 @@ class RankupCommand extends minecraftCommand {
             // Check rank requirements and execute rank-up command if met
             if (currentRank == ranks[0]) {
                 this.send(`/gc ${username} is already a Council Member u monkey`);     
+                console.log(`Player ${username} is already a Council Member`)
             } else if (skillAverage >= 42 && catacombsLevel >= 36 && senitherW >= 7000) {
                 if (currentRank !== ranks[1]) {
                     this.send(`/g setrank ${username} Shadow Adviser`);
+                    console.log(`Ranked up Player ${username} to Shadow Adviser`)
                 } else {
                     this.send(`/gc ${username} is already at the highest rank possible. For further rankup, contact Guild-Leadership.`);
+                    console.log(`Player ${username} is already a Shadow Adviser`)
                 }
             } else if (skillAverage >= 28 && catacombsLevel >= 24 && senitherW >= 2000) {
                 if (currentRank !== ranks[2]) {
                     this.send(`/g setrank ${username} Shadow Sentry`);
+                    console.log(`Ranked up Player ${username} to Shadow Sentry`)
                 } else {
                     this.send(`/gc ${username} already has the highest rank they meet requirements for.`);
-                    await this.delay(1000);
+                    console.log(`Player ${username} is already a Shadow Sentry`)
+                    await this.delay(2000);
                     this.send(`/gc Next Rank | Skill Average : ${skillAverage}/42 | Catacombs : ${catacombsLevel}/36 | Weight : ${senitherW}/7000 .`);
+                    console.log(`/gc Next Rank | Skill Average : ${skillAverage}/42 | Catacombs : ${catacombsLevel}/36 | Weight : ${senitherW}/7000 .`)
                 }
             } else {
                 this.send(`/gc ${username} does not meet the requirements for a rank-up.`);
-                await this.delay(1000);
-                this.send(`/gc Next Rank | Skill Average : ${skillAverage}/28 | Catacombs : ${catacombsLevel}/24 | Weight : ${senitherW}/2000 .`);                 
+                console.log(`Player ${username} does not meet the requirements for a rank-up.`)
+                await this.delay(2000);
+                this.send(`/gc Next Rank | Skill Average : ${skillAverage}/28 | Catacombs : ${catacombsLevel}/24 | Weight : ${senitherW}/2000 .`);
+                console.log(`/gc Next Rank | Skill Average : ${skillAverage}/28 | Catacombs : ${catacombsLevel}/24 | Weight : ${senitherW}/2000 .`)             
                 }
         } catch (error) {
             this.send(`/gc [ERROR] ${error}`);
