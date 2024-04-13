@@ -11,6 +11,9 @@ class VoteCommand extends minecraftCommand {
         this.totalVotes = 0;
         this.duration = 0;
         this.optionsList = [];
+
+        // Bind the context
+        this.handleVote = this.handleVote.bind(this);
     }
 
     async onCommand(username, message) {
