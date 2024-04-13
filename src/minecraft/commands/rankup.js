@@ -68,14 +68,14 @@ class RankupCommand extends minecraftCommand {
                 } else {
                     this.send(`/gc ${username} already has the highest rank they meet requirements for.`);
                     console.log(`Player ${username} is already a Shadow Sentry`)
-                    await this.delay(2000);
+                    await new Promise(resolve => setTimeout(resolve, 1000)); // 1-second delay
                     this.send(`/gc Next Rank | Skill Average : ${skillAverage}/42 | Catacombs : ${catacombsLevel}/36 | Weight : ${senitherW}/7000 .`);
                     console.log(`/gc Next Rank | Skill Average : ${skillAverage}/42 | Catacombs : ${catacombsLevel}/36 | Weight : ${senitherW}/7000 .`)
                 }
             } else {
                 this.send(`/gc ${username} does not meet the requirements for a rank-up.`);
                 console.log(`Player ${username} does not meet the requirements for a rank-up.`)
-                await this.delay(2000);
+                await new Promise(resolve => setTimeout(resolve, 1000)); // 1-second delay
                 this.send(`/gc Next Rank | Skill Average : ${skillAverage}/28 | Catacombs : ${catacombsLevel}/24 | Weight : ${senitherW}/2000 .`);
                 console.log(`/gc Next Rank | Skill Average : ${skillAverage}/28 | Catacombs : ${catacombsLevel}/24 | Weight : ${senitherW}/2000 .`)             
                 }
