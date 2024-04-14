@@ -1,5 +1,5 @@
 const { EmbedBuilder } = require("discord.js");
-const { buildSkyblockCalendar } = require("../../../constants/calendar.js");
+const { buildSkyblockCalendar } = require("../../API/constants/calendar.js");
 
 // Call the function with your desired parameters
 const calendar = buildSkyblockCalendar();
