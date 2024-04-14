@@ -18,18 +18,18 @@ module.exports = {
 
       const calendar = response.data;
 
-      const fields = Object.entries(calendar.events).map(([key, event]) => {
-        if (!event || !event.start || !event.end || !event.duration || !event.events) {
-          console.log(`Invalid event data for ${key}. Please check the event structure.`);
+      const fields = calendar.events.map(event => {
+        if (!event || !event.start || !event.end || !event.title || !event.type) {
+          console.log(`Invalid event data. Please check the event structure.`, event);
           return null;
         }
-      
+
         return {
-          name: key,
-          value: `Start: ${new Date(event.start)}\nEnd: ${new Date(event.end)}\nDuration: ${event.duration} ms\nEvents: ${event.events.length}`,
+          name: event.title,
+          value: `Start: ${new Date(event.start)}\nEnd: ${new Date(event.end)}\nType: ${event.type}`,
           inline: true
         };
-        }).filter(field => field !== null);
+      }).filter(field => field !== null);
 
       const embed = new Embed("#2ECC71", "Skyblock Calendar", `Calendar from ${calendar.from} to ${calendar.to}`, fields);
 
