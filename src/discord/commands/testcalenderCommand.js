@@ -1,3 +1,6 @@
+const { getSkyblockCalendar } = require("../../../API/functions/getCalendar.js");
+
+
 module.exports = {
     name: "testCalendar",
     description: "Test command to output the data from getSkyblockCalendar to console for debugging.",
