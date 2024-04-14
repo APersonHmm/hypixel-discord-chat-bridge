@@ -1,19 +1,7 @@
 const HypixelDiscordChatBridgeError = require("../../contracts/errorHandler.js");
-const { MessageEmbed } = require("discord.js");
+const { EmbedBuilder } = require("@discordjs/builders");
 const config = require("../../../config.json");
 const fs = require("fs");
-
-function splitIntoChunks(str, chunkSize) {
-  const chunks = [];
-  let startIndex = 0;
-
-  while (startIndex < str.length) {
-    chunks.push(str.substr(startIndex, chunkSize));
-    startIndex += chunkSize;
-  }
-
-  return chunks;
-}
 
 module.exports = {
   name: "info",
@@ -29,21 +17,19 @@ module.exports = {
 
     const { discordCommands, minecraftCommands } = getCommands(commands);
 
-    const chunkSize = 1024; // Adjust this value based on your needs
+    const discordChunks = chunkArray(discordCommands, 10);
+    const minecraftChunks = chunkArray(minecraftCommands, 10);
 
-    const discordChunks = splitIntoChunks(discordCommands, chunkSize);
-    const minecraftChunks = splitIntoChunks(minecraftCommands, chunkSize);
-
-    const infoEmbed = new MessageEmbed()
+    const infoEmbed = new EmbedBuilder()
       .setColor(0x0099ff)
       .setTitle("Hypixel Bridge Bot Commands");
 
     discordChunks.forEach((chunk, index) => {
-      infoEmbed.addField(`Discord Commands ${index + 1}`, chunk, true);
+      infoEmbed.addField(`Discord Commands ${index + 1}`, chunk.join('\n'), true);
     });
 
     minecraftChunks.forEach((chunk, index) => {
-      infoEmbed.addField(`Minecraft Commands ${index + 1}`, chunk, true);
+      infoEmbed.addField(`Minecraft Commands ${index + 1}`, chunk.join('\n'), true);
     });
 
     infoEmbed
@@ -87,8 +73,7 @@ function getCommands(commands) {
     .map(({ name, options }) => {
       const optionsString = options?.map(({ name, required }) => (required ? ` (${name})` : ` [${name}]`)).join("");
       return `- \`${name}${optionsString ? optionsString : ""}\`\n`;
-    })
-    .join("");
+    });
 
   const minecraftCommands = fs
     .readdirSync("./src/minecraft/commands")
@@ -100,8 +85,20 @@ function getCommands(commands) {
         .join("");
 
       return `- \`${command.name}${optionsString}\`\n`;
-    })
-    .join("");
+    });
 
   return { discordCommands, minecraftCommands };
+}
+
+function chunkArray(myArray, chunk_size){
+    var index = 0;
+    var arrayLength = myArray.length;
+    var tempArray = [];
+    
+    for (index = 0; index < arrayLength; index += chunk_size) {
+        myChunk = myArray.slice(index, index+chunk_size);
+        tempArray.push(myChunk);
+    }
+
+    return tempArray;
 }
