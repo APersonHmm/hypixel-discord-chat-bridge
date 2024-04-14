@@ -11,7 +11,7 @@ module.exports = {
       .setDescription(`Online since <t:${Math.floor((Date.now() - interaction.client.uptime) / 1000)}:R>`)
       .setFooter({
         text: `/help [command] for more information`,
-        iconURL: "https://imgur.com/a/e9XSM3A.png",
+        iconURL: "https://i.imgur.com/vt9IRtV.png",
       });
 
     interaction.followUp({ embeds: [uptimeEmbed] });

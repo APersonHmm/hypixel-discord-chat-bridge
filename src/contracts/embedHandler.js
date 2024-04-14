@@ -12,7 +12,7 @@ class Embed extends EmbedBuilder {
 
     this.setFooter({
       text: `/help [command] for more information`,
-      iconURL: "https://imgur.com/a/e9XSM3A.png",
+      iconURL: "https://i.imgur.com/vt9IRtV.png",
     });
 
     if (color) {

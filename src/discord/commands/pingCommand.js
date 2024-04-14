@@ -14,7 +14,7 @@ module.exports = {
       .setDescription(`Client Latency: \`${clientLatency}ms\`\nAPI Latency: \`${apiLatency}ms\``)
       .setFooter({
         text: `/help [command] for more information`,
-        iconURL: "https://imgur.com/a/e9XSM3A.png",
+        iconURL: "https://i.imgur.com/vt9IRtV.png",
       });
 
     interaction.followUp({ embeds: [embed] });

@@ -24,7 +24,7 @@ module.exports = {
       .setDescription(`Successfully executed \`/g unmute ${name}\``)
       .setFooter({
         text: `/help [command] for more information`,
-        iconURL: "https://imgur.com/a/e9XSM3A.png",
+        iconURL: "https://i.imgur.com/vt9IRtV.png",
       });
 
     await interaction.followUp({
