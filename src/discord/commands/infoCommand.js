@@ -24,13 +24,21 @@ module.exports = {
       .setColor(0x0099ff)
       .setTitle("Hypixel Bridge Bot Commands");
 
-    discordChunks.forEach((chunk, index) => {
-      infoEmbed.addFields({ name: `Discord Commands ${index + 1}`, value: chunk.join('\n'), inline: true });
-    });
+      discordChunks.forEach((chunk, index) => {
+        helpMenu.addFields({
+          name: `Discord Commands ${index + 1}`,
+          value: chunk.join('\n'),
+          inline: true,
+        });
+      });
 
-    minecraftChunks.forEach((chunk, index) => {
-      infoEmbed.addFields({ name: `Minecraft Commands ${index + 1}`, value: chunk.join('\n'), inline: true });
-    });
+      minecraftChunks.forEach((chunk, index) => {
+        helpMenu.addFields({
+          name: `Minecraft Commands ${index + 1}`,
+          value: chunk.join('\n'),
+          inline: true,
+        });
+      });
 
     infoEmbed
       .addFields("\u200B", "\u200B")
