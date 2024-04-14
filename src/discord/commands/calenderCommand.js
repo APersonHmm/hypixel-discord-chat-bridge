@@ -1,28 +1,29 @@
-const { EmbedBuilder } = require("discord.js");
+const { Embed } = require("../../contracts/embedHandler.js");
+const HypixelDiscordChatBridgeError = require("../../contracts/errorHandler.js");
 const { buildSkyblockCalendar } = require("../../../API/constants/calendar.js");
 
-// Call the function with your desired parameters
-const calendar = buildSkyblockCalendar();
+module.exports = {
+  name: "calendar",
+  description: "Get Skyblock calendar.",
+  requiresBot: true,
 
-// Create a new embed builder
-const embed = new EmbedBuilder()
-  .setTitle("Skyblock Calendar")
-  .setDescription(`Calendar from ${calendar.from} to ${calendar.to}`)
-  .addField("Date", calendar.date, true)
-  .addField("Year", calendar.year, true)
-  .addField("Month", calendar.month, true)
-  .addField("Day", calendar.day, true)
-  .addField("Time", calendar.time, true)
-  .addField("Hour", calendar.hour, true)
-  .addField("Minute", calendar.minute, true)
-  .addField("Next Day Countdown", calendar.next_day_countdown, true)
-  .addField("Next Month Countdown", calendar.next_month_countdown, true)
-  .addField("Next Year Countdown", calendar.next_year_countdown, true);
+  execute: async (interaction) => {
+    try {
+      const calendar = buildSkyblockCalendar();
 
-// Add fields for each event
-Object.entries(calendar.events).forEach(([key, event]) => {
-  embed.addField(event.name, `Duration: ${event.duration} ms\nEvents: ${event.events.length}`);
-});
+      const fields = Object.entries(calendar.events).map(([key, event]) => {
+        return {
+          name: event.name,
+          value: `Duration: ${event.duration} ms\nEvents: ${event.events.length}`,
+          inline: true
+        };
+      });
 
-// Send the embed
-channel.send(embed);
+      const embed = new Embed("#2ECC71", "Skyblock Calendar", `Calendar from ${calendar.from} to ${calendar.to}`, fields);
+
+      return await interaction.followUp({ embeds: [embed] });
+    } catch (error) {
+      throw new HypixelDiscordChatBridgeError("Error getting Skyblock calendar. Please try again.");
+    }
+  },
+};
