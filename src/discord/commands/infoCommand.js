@@ -25,16 +25,16 @@ module.exports = {
       .setTitle("Hypixel Bridge Bot Commands");
 
     discordChunks.forEach((chunk, index) => {
-      infoEmbed.addField(`Discord Commands ${index + 1}`, chunk.join('\n'), true);
+      infoEmbed.addFields(`Discord Commands ${index + 1}`, chunk.join('\n'), true);
     });
 
     minecraftChunks.forEach((chunk, index) => {
-      infoEmbed.addField(`Minecraft Commands ${index + 1}`, chunk.join('\n'), true);
+      infoEmbed.addFields(`Minecraft Commands ${index + 1}`, chunk.join('\n'), true);
     });
 
     infoEmbed
-      .addField("\u200B", "\u200B")
-      .addField(
+      .addFields("\u200B", "\u200B")
+      .addFields(
         "Minecraft Information",
         `Bot Username: \`${bot.username}\`\nPrefix: \`${config.minecraft.bot.prefix}\`\nSkyBlock Events: \`${
           config.minecraft.skyblockEventsNotifications.enabled ? "enabled" : "disabled"
@@ -45,7 +45,7 @@ module.exports = {
         )}:R>\nVersion: \`${require("../../../package.json").version}\`\n`,
         true
       )
-      .addField(
+      .addFields(
         "Discord Information",
         `Guild Channel: ${
           config.discord.channels.guildChatChannel ? `<#${config.discord.channels.guildChatChannel}>` : "None"
