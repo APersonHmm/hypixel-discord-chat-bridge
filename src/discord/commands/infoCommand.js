@@ -1,7 +1,28 @@
 const HypixelDiscordChatBridgeError = require("../../contracts/errorHandler.js");
-const { EmbedBuilder } = require("discord.js");
+const { MessageEmbed } = require("discord.js");
 const config = require("../../../config.json");
 const fs = require("fs");
+
+function splitFields(text, maxLength = 1024, separator = '\n') {
+    const parts = text.split(separator);
+    const fields = [];
+    let currentField = '';
+
+    for (const part of parts) {
+        if ((currentField + separator + part).length <= maxLength) {
+            currentField += separator + part;
+        } else {
+            fields.push(currentField);
+            currentField = part;
+        }
+    }
+
+    if (currentField) {
+        fields.push(currentField);
+    }
+
+    return fields;
+}
 
 module.exports = {
   name: "info",
@@ -17,20 +38,22 @@ module.exports = {
 
     const { discordCommands, minecraftCommands } = getCommands(commands);
 
-    const infoEmbed = new EmbedBuilder()
+    const infoEmbed = new MessageEmbed()
       .setColor(0x0099ff)
-      .setTitle("Hypixel Bridge Bot Commands")
-      .addFields(
-        {
-          name: "**Minecraft Commands**: ",
-          value: `${minecraftCommands}`,
-          inline: true,
-        },
-        {
-          name: "**Discord Commands**: ",
-          value: `${discordCommands}`,
-          inline: true,
-        },
+      .setTitle("Hypixel Bridge Bot Commands");
+
+    const minecraftCommandsFields = splitFields(minecraftCommands.join(''));
+    const discordCommandsFields = splitFields(discordCommands.join(''));
+
+    minecraftCommandsFields.forEach((field, index) => {
+        infoEmbed.addField(`**Minecraft Commands ${index + 1}**: `, field, true);
+    });
+
+    discordCommandsFields.forEach((field, index) => {
+        infoEmbed.addField(`**Discord Commands ${index + 1}**: `, field, true);
+    });
+
+    infoEmbed.addFields(
         { name: "\u200B", value: "\u200B" },
         {
           name: "**Minecraft Information**:",
@@ -65,6 +88,7 @@ module.exports = {
         text: "/help [command] for more information",
         iconURL: "https://i.imgur.com/vt9IRtV.png",
       });
+
     await interaction.followUp({ embeds: [infoEmbed] });
   },
 };
