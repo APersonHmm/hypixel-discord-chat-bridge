@@ -1,5 +1,5 @@
 const HypixelDiscordChatBridgeError = require("../../contracts/errorHandler.js");
-const { MessageEmbed } = require("discord.js");
+const { EmbedBuilder } = require("discord.js");
 const config = require("../../../config.json");
 const fs = require("fs");
 
@@ -38,7 +38,7 @@ module.exports = {
 
     const { discordCommands, minecraftCommands } = getCommands(commands);
 
-    const infoEmbed = new MessageEmbed()
+    const infoEmbed = new EmbedBuilder()
       .setColor(0x0099ff)
       .setTitle("Hypixel Bridge Bot Commands");
 
