@@ -1,5 +1,8 @@
-const { EmbedBuilder } = require("../../contracts/EmbedBuilder.js");
+const HypixelDiscordChatBridgeError = require("../../contracts/errorHandler.js");
+const { EmbedBuilder } = require("discord.js");
 const { getSkyblockCalendar } = require("../../../API/functions/getCalendar.js");
+
+
 
 module.exports = {
   name: "calendar",
