@@ -68,7 +68,7 @@ class DiscordManager extends CommunicationBridge {
     if (webhooks.size === 0) {
       channel.createWebhook({
         name: "Hypixel Chat Bridge",
-        avatar: "https://imgur.com/tgwQJTX.png",
+        avatar: "https://imgur.com/a/e9XSM3A.png",
       });
 
       await this.getWebhook(discord, type);

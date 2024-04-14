@@ -196,7 +196,7 @@ class StateHandler extends eventHandler {
             .setThumbnail(`https://www.mc-heads.net/avatar/${player.nickname}`)
             .setFooter({
               text: `/help [command] for more information`,
-              iconURL: "https://imgur.com/tgwQJTX.png",
+              iconURL: "https://imgur.com/a/e9XSM3A.png",
             });
 
           await client.channels.cache.get(`${config.discord.channels.loggingChannel}`).send({ embeds: [statsEmbed] });
