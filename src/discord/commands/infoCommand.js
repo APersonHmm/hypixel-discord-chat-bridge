@@ -74,8 +74,7 @@ function getCommands(commands) {
     .map(({ name, options }) => {
       const optionsString = options?.map(({ name, required }) => (required ? ` (${name})` : ` [${name}]`)).join("");
       return `- \`${name}${optionsString ? optionsString : ""}\`\n`;
-    })
-    .join("");
+    });
 
   const minecraftCommands = fs
     .readdirSync("./src/minecraft/commands")
@@ -87,8 +86,7 @@ function getCommands(commands) {
         .join("");
 
       return `- \`${command.name}${optionsString}\`\n`;
-    })
-    .join("");
+    });
 
   return { discordCommands, minecraftCommands };
 }
