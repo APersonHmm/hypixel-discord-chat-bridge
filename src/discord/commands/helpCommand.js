@@ -23,8 +23,7 @@ module.exports = {
         .map(({ name, options }) => {
           const optionsString = options?.map(({ name, required }) => (required ? ` (${name})` : ` [${name}]`)).join("");
           return `- \`${name}${optionsString ? optionsString : ""}\`\n`;
-        })
-        .join("");
+        });
 
       const minecraftCommands = fs
         .readdirSync("./src/minecraft/commands")
@@ -36,29 +35,45 @@ module.exports = {
             .join("");
 
           return `- \`${command.name}${optionsString}\`\n`;
-        })
-        .join("");
+        });
+
+      const chunkSize = 10; // Adjust this value based on your needs
+      const discordChunks = [];
+      const minecraftChunks = [];
+
+      for (let i = 0; i < discordCommands.length; i += chunkSize) {
+        discordChunks.push(discordCommands.slice(i, i + chunkSize));
+      }
+
+      for (let i = 0; i < minecraftCommands.length; i += chunkSize) {
+        minecraftChunks.push(minecraftCommands.slice(i, i + chunkSize));
+      }
 
       const helpMenu = new EmbedBuilder()
         .setColor(0x0099ff)
         .setTitle("Hypixel Discord Chat Bridge Commands")
-        .setDescription("() = required argument, [] = optional argument")
-        .addFields(
-          {
-            name: "**Minecraft**: ",
-            value: `${minecraftCommands}`,
-            inline: true,
-          },
-          {
-            name: "**Discord**: ",
-            value: `${discordCommands}`,
-            inline: true,
-          }
-        )
-        .setFooter({
-          text: "/help [command] for more information",
-          iconURL: "https://imgur.com/tgwQJTX.png",
+        .setDescription("() = required argument, [] = optional argument");
+
+      discordChunks.forEach((chunk, index) => {
+        helpMenu.addFields({
+          name: `Discord Commands ${index + 1}`,
+          value: chunk.join('\n'),
+          inline: true,
         });
+      });
+
+      minecraftChunks.forEach((chunk, index) => {
+        helpMenu.addFields({
+          name: `Minecraft Commands ${index + 1}`,
+          value: chunk.join('\n'),
+          inline: true,
+        });
+      });
+
+      helpMenu.setFooter({
+        text: "/help [command] for more information",
+        iconURL: "https://imgur.com/tgwQJTX.png",
+      });
 
       await interaction.followUp({ embeds: [helpMenu] });
     } else {
