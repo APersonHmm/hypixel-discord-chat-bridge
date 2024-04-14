@@ -8,6 +8,7 @@ class CoinFlipCommand extends minecraftCommand {
         this.name = "coinflip";
         this.aliases = ["cf"];
         this.description = "Flip a coin.";
+        this.options = [];
     }
 
     onCommand() {

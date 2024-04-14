@@ -7,6 +7,7 @@ class DiceRollCommand extends minecraftCommand {
         this.name = "diceroll";
         this.aliases = ["dr" , "dice"];
         this.description = "Roll a dice.";
+        this.options = [];
     }
 
     onCommand() {

@@ -8,6 +8,7 @@ class RandomSongCommand extends minecraftCommand {
         this.name = "randomsong";
         this.aliases = ["rs"];
         this.description = "Get a random song from a specific Deezer playlist.";
+        this.options = [];
     }
 
     async onCommand() {
