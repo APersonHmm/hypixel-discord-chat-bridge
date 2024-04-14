@@ -37,23 +37,24 @@ class FlexSkillsCommand extends minecraftCommand {
 
         // Array of possible flex messages
         this.flexMessages = [
-            "Your ${stat} is impressive! Keep up the good work! You're at ${statLevel} ",
-            "You're doing great with your ${stat}! Keep it up! You're at ${statLevel} ",
-            "Your ${stat} is top-notch! Don't stop now! You're at ${statLevel} ",
-            "You're really good at ${stat}! Keep going! You're at ${statLevel} ",
-            "Your ${stat} level is ${statLevel}! That's amazing!",
-            "Wow, ${statLevel} in ${stat}? You're really good at this!",
-            "Your ${stat} level is so high, it's impressive. It's ${statLevel}.",
-            "Is your ${stat} level ${statLevel}? You must be a pro!",
-            "Your ${stat} level is ${statLevel}. You're doing great!",
+            "Your ${stat} is impressive! Keep up the good work! You're at level ${statLevel} with ${statExperience} experience.",
+            "You're doing great with your ${stat}! Keep it up! You're at level ${statLevel} with ${statExperience} experience.",
+            "Your ${stat} is top-notch! Don't stop now! You're at level ${statLevel} with ${statExperience} experience.",
+            "You're really good at ${stat}! Keep going! You're at level ${statLevel} with ${statExperience} experience.",
+            "Your ${stat} level is ${statLevel} with ${statExperience} experience! That's amazing!",
+            "Wow, level ${statLevel} in ${stat} with ${statExperience} experience? You're really good at this!",
+            "Your ${stat} level is so high, it's impressive. It's level ${statLevel} with ${statExperience} experience.",
+            "Is your ${stat} level ${statLevel} with ${statExperience} experience? You must be a pro!",
+            "Your ${stat} level is ${statLevel} with ${statExperience} experience. You're doing great!",
         ];
     } 
 
     // Function to get a random flex message
-    getRandomFlexMessage(stat, statLevel) {
-        const randomIndex = Math.floor(Math.random() * this.flexMessages.length);
-        return this.flexMessages[randomIndex].replace('${stat}', stat).replace('${statLevel}', statLevel);
-    }
+    // Function to get a random flex message
+getRandomFlexMessage(stat, statLevel, statExperience) {
+    const randomIndex = Math.floor(Math.random() * this.flexMessages.length);
+    return this.flexMessages[randomIndex].replace('${stat}', stat).replace('${statLevel}', statLevel).replace('${statExperience}', statExperience);
+}
 
     async onCommand(username, message) {
         try {
@@ -74,21 +75,24 @@ class FlexSkillsCommand extends minecraftCommand {
             let highStats = [];
             for (let stat in this.thresholds) {
                 if (skills[stat] && skills[stat].level > this.thresholds[stat]) {
-                    highStats.push({ stat: stat, level: skills[stat].level });
+                    highStats.push({ stat: stat, level: skills[stat].level, experience: skills[stat].experience });
                 }
                 else if (dungeons[stat] && dungeons[stat].level > this.thresholds[stat]) {
-                    highStats.push({ stat: stat, level: dungeons[stat].level });
+                    highStats.push({ stat: stat, level: dungeons[stat].level, experience: dungeons[stat].experience });
                 }
             }
     
-            // If there are any high stats, randomly select one and send a flex message for it
-            if (highStats.length > 0) {
-                const randomIndex = Math.floor(Math.random() * highStats.length);
-                const { stat, level } = highStats[randomIndex];
-                const flexMessage = this.getRandomFlexMessage(stat, level);
-                console.log(`Flex Message: ${flexMessage}`); // Debug: print the flex message
-                this.send(`/gc ${username}, ${flexMessage}`);
-            }
+        // If there are any high stats, randomly select one and send a flex message for it
+        if (highStats.length > 0) {
+            const randomIndex = Math.floor(Math.random() * highStats.length);
+            const { stat, level, experience } = highStats[randomIndex];
+            const flexMessage = this.getRandomFlexMessage(stat, level, experience);
+            console.log(`Flex Message: ${flexMessage}`); // Debug: print the flex message
+            this.send(`/gc ${username}, ${flexMessage}`);
+        } else {
+            // If none of the skills are high enough, send a motivational message
+            this.send(`/gc ${username}, none of your skills are high enough yet, but keep going! You're doing great!`);
+        }
         } catch (error) {
             console.error(`Error: ${error}`); // Debug: print the error
         }
