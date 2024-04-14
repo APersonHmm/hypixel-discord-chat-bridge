@@ -18,16 +18,17 @@ module.exports = {
 
       const calendar = response.data;
       const fields = Object.entries(calendar.events).map(([key, event]) => {
-        if (!event.name || !event.duration || !event.events) {
-          throw new HypixelDiscordChatBridgeError("Invalid event data. Please check the event structure.");
+        if (!event || !event.start || !event.end || !event.duration || !event.events) {
+          console.log(`Invalid event data for ${key}. Please check the event structure.`);
+          return null;
         }
 
         return {
-          name: event.name,
-          value: `Duration: ${event.duration} ms\nEvents: ${event.events.length}`,
-          inline: true
-        };
-      });
+            name: key,
+            value: `Start: ${new Date(event.start)}\nEnd: ${new Date(event.end)}\nDuration: ${event.duration} ms\nEvents: ${event.events.length}`,
+            inline: true
+          };
+        }).filter(field => field !== null);
 
       const embed = new Embed("#2ECC71", "Skyblock Calendar", `Calendar from ${calendar.from} to ${calendar.to}`, fields);
 
