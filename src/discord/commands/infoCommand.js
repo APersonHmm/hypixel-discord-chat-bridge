@@ -25,11 +25,11 @@ module.exports = {
       .setTitle("Hypixel Bridge Bot Commands");
 
     discordChunks.forEach((chunk, index) => {
-      infoEmbed.addFields(`Discord Commands ${index + 1}`, chunk.join('\n'), true);
+      infoEmbed.addFields({ name: `Discord Commands ${index + 1}`, value: chunk.join('\n'), inline: true });
     });
 
     minecraftChunks.forEach((chunk, index) => {
-      infoEmbed.addFields(`Minecraft Commands ${index + 1}`, chunk.join('\n'), true);
+      infoEmbed.addFields({ name: `Minecraft Commands ${index + 1}`, value: chunk.join('\n'), inline: true });
     });
 
     infoEmbed
