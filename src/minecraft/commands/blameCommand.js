@@ -9,7 +9,7 @@ class BlameCommand extends minecraftCommand {
         super(minecraft);
 
         this.name = "blame";
-        this.aliases = ["blamee"];
+        this.aliases = ["blame" , "bully" , "sham"];
         this.description = "Blames the player if their stats are too low.";
         this.options = [
             {
