@@ -71,10 +71,10 @@ class FlexSkillsCommand extends minecraftCommand {
             // Collect all stats that are above their thresholds
             let highStats = [];
             for (let stat in this.thresholds) {
-                if (skills[stat] && skills[stat].level > this.thresholds[stat]) {
+                if (skills[stat] && skills[stat].level >= this.thresholds[stat]) {
                     highStats.push({ stat: stat, level: skills[stat].level, experience: skills[stat].xpCurrent });
                 }
-                else if (dungeons[stat] && dungeons[stat].level > this.thresholds[stat]) {
+                else if (dungeons[stat] && dungeons[stat].level >= this.thresholds[stat]) {
                     highStats.push({ stat: stat, level: dungeons[stat].level, experience: dungeons[stat].xpCurrent });
                 }
             }
