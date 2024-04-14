@@ -10,6 +10,7 @@ module.exports = {
   execute: async (interaction) => {
     try {
       const calendar = buildSkyblockCalendar();
+      console.log(calendar);
 
       if (!calendar || !calendar.events) {
         throw new HypixelDiscordChatBridgeError("Error getting Skyblock calendar. Please try again.");
