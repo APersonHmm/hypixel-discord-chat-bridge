@@ -1,6 +1,6 @@
 const { Embed } = require("../../contracts/embedHandler.js");
 const HypixelDiscordChatBridgeError = require("../../contracts/errorHandler.js");
-const { buildSkyblockCalendar } = require("../../../API/constants/calendar.js");
+const { getSkyblockCalendar } = require("../../../API/functions/getCalendar.js");
 
 module.exports = {
   name: "calendar",
@@ -9,13 +9,14 @@ module.exports = {
 
   execute: async (interaction) => {
     try {
-      const calendar = buildSkyblockCalendar();
-      console.log(calendar);
+      const response = getSkyblockCalendar();
+      console.log(response);
 
-      if (!calendar || !calendar.events) {
+      if (!response || response.status !== 200 || !response.data || !response.data.events) {
         throw new HypixelDiscordChatBridgeError("Error getting Skyblock calendar. Please try again.");
       }
 
+      const calendar = response.data;
       const fields = Object.entries(calendar.events).map(([key, event]) => {
         if (!event.name || !event.duration || !event.events) {
           throw new HypixelDiscordChatBridgeError("Invalid event data. Please check the event structure.");
