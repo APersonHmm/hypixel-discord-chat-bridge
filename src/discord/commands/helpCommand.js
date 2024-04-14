@@ -20,9 +20,9 @@ module.exports = {
 
     if (commandName === undefined) {
       const discordCommands = interaction.client.commands
-        .map(({ name, options }) => {
+        .map(({ name, description, options }) => {
           const optionsString = options?.map(({ name, required }) => (required ? ` (${name})` : ` [${name}]`)).join("");
-          return `- \`${name}${optionsString ? optionsString : ""}\`\n`;
+          return `- \`${name}${optionsString ? optionsString : ""}\`: ${description}\n`;
         });
 
       const minecraftCommands = fs
@@ -34,7 +34,7 @@ module.exports = {
             ?.map(({ name, required }) => (required ? ` (${name})` : ` [${name}]`))
             .join("");
 
-          return `- \`${command.name}${optionsString}\`\n`;
+          return `- \`${command.name}${optionsString}\`: ${command.description}\n`;
         });
 
       const chunkSize = 10; // Adjust this value based on your needs
