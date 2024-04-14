@@ -11,7 +11,15 @@ module.exports = {
     try {
       const calendar = buildSkyblockCalendar();
 
+      if (!calendar || !calendar.events) {
+        throw new HypixelDiscordChatBridgeError("Error getting Skyblock calendar. Please try again.");
+      }
+
       const fields = Object.entries(calendar.events).map(([key, event]) => {
+        if (!event.name || !event.duration || !event.events) {
+          throw new HypixelDiscordChatBridgeError("Invalid event data. Please check the event structure.");
+        }
+
         return {
           name: event.name,
           value: `Duration: ${event.duration} ms\nEvents: ${event.events.length}`,
