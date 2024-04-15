@@ -3,7 +3,7 @@ const { getSkyblockCalendar } = require("../../../API/functions/getCalendar.js")
 const HypixelDiscordChatBridgeError = require("../../contracts/errorHandler.js");
 
 module.exports = {
-  name: "upcomingEvents",
+  name: "calender",
   description: "Shows upcoming events.",
   requiresBot: true,
 
