@@ -24,7 +24,7 @@ module.exports = {
     for (const event in EVENTS.data.events) {
       const eventData = EVENTS.data.events[event];
       let dates = eventData.events.map(e => new Date(e.start_timestamp).toLocaleString()).slice(0, 5);
-      embed.addField(eventData.name, dates.join('\n'), true);
+      embed.addFields({ name: eventData.name, value: dates.join('\n'), inline: true });
     }
 
     console.log("Embed message built:", embed);
