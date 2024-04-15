@@ -5,7 +5,7 @@ const fs = require("fs");
 const { getSkyblockCalendar } = require("../../../API/functions/getCalendar.js");
 
 module.exports = {
-  name: "upcomingEvents",
+  name: "calender",
   description: "Shows upcoming events.",
   options: [],
 
