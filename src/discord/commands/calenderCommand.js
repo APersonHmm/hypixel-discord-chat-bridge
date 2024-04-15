@@ -20,21 +20,18 @@ module.exports = {
     console.log("Building embed message...");
 
     // ELECTION
-    embed.addFields('ELECTION', '');
     embed.addFields(
       { name: 'Election Opens', value: `<t:${Math.floor(EVENTS.data.events.ELECTION_BOOTH_OPENS.events[0].start_timestamp / 1000)}:f> (<t:${Math.floor(EVENTS.data.events.ELECTION_BOOTH_OPENS.events[0].start_timestamp / 1000)}:R>)`, inline: true },
       { name: 'Election Closes', value: `<t:${Math.floor(EVENTS.data.events.ELECTION_OVER.events[0].start_timestamp / 1000)}:f> (<t:${Math.floor(EVENTS.data.events.ELECTION_OVER.events[0].start_timestamp / 1000)}:R>)`, inline: true },
     );
 
     // BANK
-    embed.addFields('BANK', '');
     embed.addFields(
       { name: 'Bank Interest', value: `<t:${Math.floor(EVENTS.data.events.BANK_INTEREST.events[0].start_timestamp / 1000)}:f> (<t:${Math.floor(EVENTS.data.events.BANK_INTEREST.events[0].start_timestamp / 1000)}:R>)`, inline: true },
       { name: 'Dark Auction', value: `<t:${Math.floor(EVENTS.data.events.DARK_AUCTION.events[0].start_timestamp / 1000)}:f> (<t:${Math.floor(EVENTS.data.events.DARK_AUCTION.events[0].start_timestamp / 1000)}:R>)`, inline: true },
     );
 
     // EVENTS
-    embed.addFields('EVENTS', '');
     embed.addFields(
       { name: 'Spooky Festival', value: `<t:${Math.floor(EVENTS.data.events.SPOOKY_FESTIVAL.events[0].start_timestamp / 1000)}:f> (<t:${Math.floor(EVENTS.data.events.SPOOKY_FESTIVAL.events[0].start_timestamp / 1000)}:R>)`, inline: true },
       { name: 'Fear Mongerer', value: `<t:${Math.floor(EVENTS.data.events.FEAR_MONGERER.events[0].start_timestamp / 1000)}:f> (<t:${Math.floor(EVENTS.data.events.FEAR_MONGERER.events[0].start_timestamp / 1000)}:R>)`, inline: true },
@@ -44,7 +41,6 @@ module.exports = {
     );
 
     // JERRY
-    embed.addFields('JERRY', '');
     embed.addFields(
       { name: 'Jerrys Workshop opens', value: `<t:${Math.floor(EVENTS.data.events.JERRYS_WORKSHOP.events[0].start_timestamp / 1000)}:f> (<t:${Math.floor(EVENTS.data.events.JERRYS_WORKSHOP.events[0].start_timestamp / 1000)}:R>)`, inline: true },
       { name: 'Season of Jerry', value: `<t:${Math.floor(EVENTS.data.events.SEASON_OF_JERRY.events[0].start_timestamp / 1000)}:f> (<t:${Math.floor(EVENTS.data.events.SEASON_OF_JERRY.events[0].start_timestamp / 1000)}:R>)`, inline: true },
