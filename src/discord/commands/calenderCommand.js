@@ -48,7 +48,7 @@ module.exports = {
       { name: 'New Year Celebration (Cakes)', value: `<t:${Math.floor(EVENTS.data.events.NEW_YEAR_CELEBRATION.events[0].start_timestamp / 1000)}:f> (<t:${Math.floor(EVENTS.data.events.NEW_YEAR_CELEBRATION.events[0].start_timestamp / 1000)}:R>)`, inline: true },
     );
 
-    console.log("Embed message built:", embed);
+    console.log("Embed message built:", events);
 
     events.setFooter({
       text: "/help [command] for more information",
