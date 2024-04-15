@@ -1,5 +1,5 @@
 const { Embed } = require("../../contracts/embedHandler.js");
-const { getSkyblockCalendar } = require("./getCalendar.js");
+const { getSkyblockCalendar } = require("../../../API/functions/getCalendar.js");
 const HypixelDiscordChatBridgeError = require("../../contracts/errorHandler.js");
 
 module.exports = {
