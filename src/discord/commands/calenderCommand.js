@@ -13,26 +13,26 @@ module.exports = {
     const EVENTS = getSkyblockCalendar();
     console.log("Fetched Skyblock Calendar:", EVENTS);
 
-    const embed = new EmbedBuilder()
+    const events = new EmbedBuilder()
       .setTitle('Upcoming Events')
       .setColor(0xff0000);
 
     console.log("Building embed message...");
 
     // ELECTION
-    embed.addFields(
+    events.addFields(
       { name: 'Election Opens', value: `<t:${Math.floor(EVENTS.data.events.ELECTION_BOOTH_OPENS.events[0].start_timestamp / 1000)}:f> (<t:${Math.floor(EVENTS.data.events.ELECTION_BOOTH_OPENS.events[0].start_timestamp / 1000)}:R>)`, inline: true },
       { name: 'Election Closes', value: `<t:${Math.floor(EVENTS.data.events.ELECTION_OVER.events[0].start_timestamp / 1000)}:f> (<t:${Math.floor(EVENTS.data.events.ELECTION_OVER.events[0].start_timestamp / 1000)}:R>)`, inline: true },
     );
 
     // BANK
-    embed.addFields(
+    events.addFields(
       { name: 'Bank Interest', value: `<t:${Math.floor(EVENTS.data.events.BANK_INTEREST.events[0].start_timestamp / 1000)}:f> (<t:${Math.floor(EVENTS.data.events.BANK_INTEREST.events[0].start_timestamp / 1000)}:R>)`, inline: true },
       { name: 'Dark Auction', value: `<t:${Math.floor(EVENTS.data.events.DARK_AUCTION.events[0].start_timestamp / 1000)}:f> (<t:${Math.floor(EVENTS.data.events.DARK_AUCTION.events[0].start_timestamp / 1000)}:R>)`, inline: true },
     );
 
     // EVENTS
-    embed.addFields(
+    events.addFields(
       { name: 'Spooky Festival', value: `<t:${Math.floor(EVENTS.data.events.SPOOKY_FESTIVAL.events[0].start_timestamp / 1000)}:f> (<t:${Math.floor(EVENTS.data.events.SPOOKY_FESTIVAL.events[0].start_timestamp / 1000)}:R>)`, inline: true },
       { name: 'Fear Mongerer', value: `<t:${Math.floor(EVENTS.data.events.FEAR_MONGERER.events[0].start_timestamp / 1000)}:f> (<t:${Math.floor(EVENTS.data.events.FEAR_MONGERER.events[0].start_timestamp / 1000)}:R>)`, inline: true },
       { name: 'Jacob Contest', value: EVENTS.data.events.JACOBS_CONTEST.events.slice(0, 3).map(e => `<t:${Math.floor(e.start_timestamp / 1000)}:f> (<t:${Math.floor(e.start_timestamp / 1000)}:R>)`).join('\n'), inline: true },
@@ -41,7 +41,7 @@ module.exports = {
     );
 
     // JERRY
-    embed.addFields(
+    events.addFields(
       { name: 'Jerrys Workshop opens', value: `<t:${Math.floor(EVENTS.data.events.JERRYS_WORKSHOP.events[0].start_timestamp / 1000)}:f> (<t:${Math.floor(EVENTS.data.events.JERRYS_WORKSHOP.events[0].start_timestamp / 1000)}:R>)`, inline: true },
       { name: 'Season of Jerry', value: `<t:${Math.floor(EVENTS.data.events.SEASON_OF_JERRY.events[0].start_timestamp / 1000)}:f> (<t:${Math.floor(EVENTS.data.events.SEASON_OF_JERRY.events[0].start_timestamp / 1000)}:R>)`, inline: true },
       { name: 'Jerrys Workshop closes', value: `<t:${Math.floor(EVENTS.data.events.JERRYS_WORKSHOP.events[0].end_timestamp / 1000)}:f> (<t:${Math.floor(EVENTS.data.events.JERRYS_WORKSHOP.events[0].end_timestamp / 1000)}:R>)`, inline: true },
@@ -50,7 +50,12 @@ module.exports = {
 
     console.log("Embed message built:", embed);
 
-    await interaction.followUp({ embeds: [embed] });
+    events.setFooter({
+      text: "/help [command] for more information",
+      iconURL: "https://i.imgur.com/vt9IRtV.png",
+    });
+
+    await interaction.followUp({ embeds: [events] });
     console.log("Embed message sent.");
   },
 };
