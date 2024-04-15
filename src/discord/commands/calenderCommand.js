@@ -1,6 +1,20 @@
 const HypixelDiscordChatBridgeError = require("../../contracts/errorHandler.js");
 const { EmbedBuilder } = require("discord.js");
 const { getSkyblockCalendar } = require("../../../API/functions/getCalendar.js");
+const axios = require('axios');
+
+const yearZero = 1560275700000;
+const dayMs = 50 * 60 * 1000;
+const monthLength = 31;
+const yearLength = 12 * monthLength;
+
+function getSkyblockYear(time) {
+  return Math.floor((time - yearZero) / (dayMs * yearLength));
+}
+
+function getSkyblockDay(time) {
+  return Math.floor((time - yearZero) / dayMs) % (yearLength);
+}
 
 module.exports = {
   name: "calender",
@@ -18,6 +32,13 @@ module.exports = {
       .setColor(0xff0000);
 
     console.log("Building embed message...");
+
+    // Fetch the active mayor
+    const mayorResponse = await axios.get('https://api.hypixel.net/v2/resources/skyblock/election');
+    const activeMayor = mayorResponse.data.mayor.name;
+
+    const currentYear = getSkyblockYear(Date.now());
+    const currentDay = getSkyblockDay(Date.now());
 
     // ELECTION
     events.addFields(
@@ -39,6 +60,18 @@ module.exports = {
       { name: 'Fallen Star Cult', value: EVENTS.data.events.FALLEN_STAR_CULT.events.slice(0, 3).map(e => `<t:${Math.floor(e.start_timestamp / 1000)}:f> (<t:${Math.floor(e.start_timestamp / 1000)}:R>)`).join('\n'), inline: true },
       { name: 'Traveling Zoo', value: `<t:${Math.floor(EVENTS.data.events.TRAVELING_ZOO.events[0].start_timestamp / 1000)}:f> (<t:${Math.floor(EVENTS.data.events.TRAVELING_ZOO.events[0].start_timestamp / 1000)}:R>)`, inline: true },
     );
+
+    // Add fields for Fishing Festival and Mining Fiesta
+    if (activeMayor === 'Marina') {
+      const nextMonthStart = yearZero + ((currentYear * yearLength + currentDay + (monthLength - currentDay % monthLength)) * dayMs);
+      events.addFields(
+        { name: 'Fishing Festival', value: `<t:${Math.floor(nextMonthStart / 1000)}:f> (<t:${Math.floor(nextMonthStart / 1000)}:R>)`, inline: true },
+      );
+    } else if (activeMayor === 'Cole') {
+      events.addFields(
+        { name: 'Mining Fiesta', value: `<t:${Math.floor(EVENTS.data.events.MINING_FIESTA.events[0].start_timestamp / 1000)}:f> (<t:${Math.floor(EVENTS.data.events.MINING_FIESTA.events[0].start_timestamp / 1000)}:R>)`, inline: true },
+      );
+    }
 
     // JERRY
     events.addFields(
