@@ -1,50 +1,35 @@
-const { Embed } = require("../../contracts/embedHandler.js");
-const { getSkyblockCalendar } = require("../../../API/functions/getCalendar.js");
 const HypixelDiscordChatBridgeError = require("../../contracts/errorHandler.js");
-const fs = require('fs');
-const path = require('path');
+const { EmbedBuilder } = require("discord.js");
+const config = require("../../../config.json");
+const fs = require("fs");
+const { getSkyblockCalendar } = require("../../../API/functions/getCalendar.js");
 
 module.exports = {
-  name: "calender",
+  name: "upcomingEvents",
   description: "Shows upcoming events.",
-  requiresBot: true,
+  options: [],
 
   execute: async (interaction) => {
-    try {
-      const calendarData = await getSkyblockCalendar();
+    console.log("Executing upcomingEvents command...");
 
-      const formattedData = calendarData.map(event => {
-        const eventDates = event.events.slice(0, 5).map(e => {
-          const start = new Date(e.start_timestamp);
-          const end = new Date(e.end_timestamp);
-          const now = new Date();
-          const timeUntilStart = Math.max(0, (start.getTime() - now.getTime()) / 1000);
-          const timeUntilEnd = Math.max(0, (end.getTime() - now.getTime()) / 1000);
+    const EVENTS = getSkyblockCalendar();
+    console.log("Fetched Skyblock Calendar:", EVENTS);
 
-          if (timeUntilStart > 0) {
-            return `Starts in ${timeUntilStart} seconds, ends in ${timeUntilEnd} seconds`;
-          } else if (timeUntilEnd > 0) {
-            return `Started, ends in ${timeUntilEnd} seconds`;
-          } else {
-            return `Ended`;
-          }
-        }).join('\n');
+    const embed = new EmbedBuilder()
+      .setTitle('Upcoming Events')
+      .setColor(0xff0000);
 
-        return `**${event.name}**\n${eventDates}\n`;
-      }).join('\n');
+    console.log("Building embed message...");
 
-      const embed = new Embed("#2ECC71", "Upcoming Events", formattedData);
-
-      // Write the response to a file
-      fs.writeFile(path.join(__dirname, 'debug.txt'), formattedData, (err) => {
-        if (err) {
-          console.error('Failed to write to file:', err);
-        }
-      });
-
-      await interaction.followUp({ embeds: [embed] });
-    } catch (error) {
-      throw new HypixelDiscordChatBridgeError("An error occurred while fetching the calendar data. Please try again.");
+    for (const event in EVENTS.data.events) {
+      const eventData = EVENTS.data.events[event];
+      let dates = eventData.events.map(e => new Date(e.start_timestamp).toLocaleString()).slice(0, 5);
+      embed.addField(eventData.name, dates.join('\n'), true);
     }
+
+    console.log("Embed message built:", embed);
+
+    await interaction.followUp({ embeds: [embed] });
+    console.log("Embed message sent.");
   },
 };
