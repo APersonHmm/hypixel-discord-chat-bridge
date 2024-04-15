@@ -1,7 +1,5 @@
 const HypixelDiscordChatBridgeError = require("../../contracts/errorHandler.js");
 const { EmbedBuilder } = require("discord.js");
-const config = require("../../../config.json");
-const fs = require("fs");
 const { getSkyblockCalendar } = require("../../../API/functions/getCalendar.js");
 
 module.exports = {
