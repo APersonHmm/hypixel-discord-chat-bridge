@@ -16,7 +16,7 @@ class NarwhalCommand extends minecraftCommand {
     try {
       const { data, status } = await axios.get(`https://api.imgur.com/3/gallery/search?q=narwhal`, {
         headers: {
-          'Authorization': `Client-ID ${config.API.imgurAPIkey}`
+          'Authorization': `Client-ID ${config.minecraft.API.imgurAPIkey}`
         }
       });
 
