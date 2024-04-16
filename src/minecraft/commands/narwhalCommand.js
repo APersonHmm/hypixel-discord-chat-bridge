@@ -7,7 +7,7 @@ class NarwhalCommand extends minecraftCommand {
     super(minecraft);
 
     this.name = "narwhal";
-    this.aliases = ["narwhals", "narwhalpic", "narwhalimage"];
+    this.aliases = ["narwhals", "narwhalpic", "narwhalimage","shedinja", "shedinjaCrits"];
     this.description = "Random image of a narwhal.";
     this.options = [];
   }
