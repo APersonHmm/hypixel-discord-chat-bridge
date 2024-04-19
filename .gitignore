@@ -1,6 +1,6 @@
 node_modules/
 .prettierrc.json
-notConfig.json
+config.json
 whitelist.json
 apiOutput.json
 auth-cache/
