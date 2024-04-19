@@ -5,6 +5,10 @@ A two-way chat bridge between [Hypixel](https://hypixel.net/) guild chat and a [
 > [!WARNING]
 > This software allows access to Hypixel using Mineflayer, a non-standard Minecraft client. Using this application carries the risk of your Minecraft account being banned from Hypixel. Therefore, use it at your own discretion. I hold no responsibility for any bans resulting from its usage.
 
+
+> [!WARNING]
+> This code is held up by hopes and dreams. It was made with AI and random googling by a random dude.
+
 <hr>
 
 If you found this project helpful or interesting, please consider giving it a star. It helps other developers find the project and shows your appreciation for the work that went into it. Thank you!
